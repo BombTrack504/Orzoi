@@ -2,6 +2,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
+
 from Restaurant.forms import RestaurantForm
 from .utils import detectUser, send_verification_email
 from . forms import UserForm
@@ -56,7 +57,7 @@ def registerUser(request):
 
             # send verification email (utils)
             mail_subject = 'please activate your account'
-            email_template = 'accounts/emails/acc_verifiaction_email.html'
+            email_template = 'accounts/emails/acc_verification_email.html'
             send_verification_email(
                 request, user, mail_subject, email_template)
 
@@ -103,7 +104,7 @@ def registerRestaurant(request):
 
             # send verification email
             mail_subject = 'please activate your account'
-            email_template = 'accounts/emails/acc_verifiaction_email.html'
+            email_template = 'accounts/emails/acc_verification_email.html'
             send_verification_email(
                 request, user, mail_subject, email_template)
 
