@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.get_Restaurant',
+                'accounts.context_processors.get_google_api',
             ],
         },
     },
@@ -156,3 +157,5 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'ORZOI <gaurabshrestha15901590@gamil.com>'
+
+GOOGLE_API_KEY = 'AIzaSyC5uKCX4nOJ0lMdJItT0Stvf4UlayxGk9M'
