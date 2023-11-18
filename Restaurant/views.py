@@ -12,9 +12,14 @@ from accounts.views import check_role_Restaurant
 
 from menu.models import FoodItem, Category
 
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, FoodItemForm
 
 from django.template.defaultfilters import slugify
+
+
+def get_restaurant(request):
+    restaurant = Restaurant.objects.get(user=request.user)
+    return restaurant
 
 
 @login_required(login_url='login')
@@ -89,6 +94,8 @@ def foodItems_by_category(request, pk=None):
     return render(request, 'restaurant/foodItems_by_category.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -106,12 +113,15 @@ def add_category(request):
             print(form.errors)
     else:
         form = CategoryForm()
+
     context = {
         'form': form,
     }
     return render(request, 'restaurant/add_category.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
 def edit_category(request, pk=None):
     # Use 'Category' instead of 'category' in get_object_or_404
     category_obj = get_object_or_404(Category, pk=pk)
@@ -138,8 +148,74 @@ def edit_category(request, pk=None):
     return render(request, 'restaurant/edit_category.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
 def delete_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
     messages.success(request, 'Category has been deleted successfully!')
     return redirect('menu_builder')
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+def add_food(request):
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            foodtitle = form.cleaned_data['food_title']
+            food = form.save(commit=False)
+            food.restaurant = Restaurant.objects.get(user=request.user)
+            food.slug = slugify(foodtitle)
+            form.save()
+            messages.success(request, 'Food item added Successfully!')
+            return redirect('foodItems_by_category', food.category.id)
+        else:
+            print(form.errors)
+    else:
+        form = FoodItemForm()
+        form.fields['category'].queryset = Category.objects.filter(
+            restaurant=get_restaurant(request))
+    context = {
+        'form': form,
+    }
+    return render(request, 'restaurant/add_food.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+def edit_food(request, pk=None):
+    # Use 'Category' instead of 'category' in get_object_or_404
+    food = get_object_or_404(FoodItem, pk=pk)
+
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST, request.FILES, instance=food)
+        if form.is_valid():
+            foodtitle = form.cleaned_data['food_title']
+            food = form.save(commit=False)
+            food.restaurant = Restaurant.objects.get(user=request.user)
+            food.slug = slugify(foodtitle)
+            form.save()
+            messages.success(request, 'Food Item updated successfully!')
+            return redirect('foodItems_by_category', food.category.id)
+        else:
+            print(form.errors)
+    else:
+        form = FoodItemForm(instance=food)
+        form.fields['category'].queryset = Category.objects.filter(
+            restaurant=get_restaurant(request))
+    context = {
+        'form': form,
+        'food': food,
+    }
+    return render(request, 'restaurant/edit_food.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+def delete_food(request, pk=None):
+    food = get_object_or_404(FoodItem, pk=pk)
+    food.delete()
+    messages.success(request, 'Food item has been deleted successfully!')
+    return redirect('foodItems_by_category', food.category.id)

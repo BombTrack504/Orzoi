@@ -24,6 +24,9 @@
                             <h5 class="text-uppercase">Build your Food menu</h5>
                             <!-- menu table-->
                                 <hr>
+                                <button class="btn btn-secondary" onclick="history.back()" style="  padding: 2px 1.75em;
+                                font-size: 12px; cursor: pointer;"><i class="fa fa-angle-left" aria-hidden="true"></i>Back</button>
+                                <br> <br>
                                 <h6>Add New Category</h6>
                                 <form action="{% url 'add_category' %}" method="POST">
                                     {% csrf_token %}
