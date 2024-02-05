@@ -3,9 +3,11 @@ import os
 
 
 def allow_only_images_validator(value):
-    extension = os.path.splitext(value.name)[1]  # [0] coverimage. [1]jpg
-    print(extension)
+
     valid_extensions = ['.png', '.jpg', '.jpeg']
-    if not extension.lower() in valid_extensions:
+    # Get file extension and convert to lowercase
+    extension = os.path.splitext(value.name)[1].lower()
+    if extension not in valid_extensions:
+        # Improving the error message for accuracy
         raise ValidationError(
-            'Unsuppoerted file extension. Allowed extension: ' + str(valid_extensions))
+            f'Unsupported file extension. Allowed extensions: {", ".join(valid_extensions)}')

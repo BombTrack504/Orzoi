@@ -13,7 +13,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
 
 from django.core.exceptions import PermissionDenied
-# Restrict the Restaurant from accessing the customer page
+# Restrict the Restaurant from accessing the customer
+from django.template.defaultfilters import slugify
 
 
 def check_role_Restaurant(user):
@@ -79,14 +80,14 @@ def registerUser(request):
 def registerRestaurant(request):
     if request.user.is_authenticated:
         messages.warning(request, 'you are already logged in!')
-        return redirect('dashboard')
+        return redirect('myAccount')
 
     elif request.method == 'POST':
         # store the data and create the user
         form = UserForm(request.POST)
         R_form = RestaurantForm(request.POST, request.FILES)
 
-        if form.is_valid() and R_form.is_valid:
+        if form.is_valid() and R_form.is_valid():
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
@@ -98,6 +99,9 @@ def registerRestaurant(request):
             user.save()
             Restaurant = R_form.save(commit=False)
             Restaurant.user = user
+            restaurant_name = R_form.cleaned_data['Restaurant_name']
+            Restaurant.restaurant_slug = slugify(
+                restaurant_name)+'-'+str(user.id)
             user_profile = UserProfile.objects.get(user=user)
             Restaurant.user_profile = user_profile
             Restaurant.save()
@@ -232,7 +236,7 @@ def reset_password_validate(request, uidb64, token):
         messages.info(request, "Reset your Password")
         return redirect('reset_password')
     else:
-        messages.error(request, 'Link is Expired')
+        messages.error(request, 'The link to reset your password has expired ')
         return redirect('myAccount')
 
 

@@ -18,6 +18,5 @@ class FoodItemAdmin(admin.ModelAdmin):
     list_filter = ('is_available',)
 
 
-# Register your models here.
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(FoodItem, FoodItemAdmin)

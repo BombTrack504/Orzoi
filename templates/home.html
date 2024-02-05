@@ -295,115 +295,85 @@
 						<p style="text-align:center;">All the top restaurant in your city</p>
 					</div>
 				</div>
+				
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+					
 					<div class="listing classic-grid">
+						
 						<ul class="row">
-							<li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<div class="list-post ">
-									<div class="img-holder">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/fb-subheader-2-1024x229-359x212.jpg'%}" alt=""></a>
-											<figcaption>
-												<a href="#"><img src="{% static 'extra-images/jet.png'%}" alt=""></a>
-											</figcaption>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="list-option">
-											<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i></a>
+							
+							{% for restaurant in restaurants %}
+								<li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+									<div class="list-post ">
+										<div class="img-holder">
+											<figure>
+												<a href="#" style="height: 170px; margin-top:10px;">
+													{% if restaurant.user_profile.cover_photo %}
+														<img src="{{ restaurant.user_profile.cover_photo.url }}" alt="">
+													{% else %}
+														<img src="{% static 'images/default-cover.png' %}" alt=""> 
+													{% endif %}
+												</a>
+												<figcaption>
+													<a href="#">
+													{% if restaurant.user_profile.profile_picture %}
+														<img src="{{ restaurant.user_profile.profile_picture.url }}" alt="">
+													{% else %}
+														<img src="{% static 'images/default-profile.png' %}" alt=""> 
+													{% endif %}
+													</a>
+												</figcaption>
+											</figure>
 										</div>
-										<div class="post-title">
-											<h5><a href="listing-detail.html">Jet’s
-													Kitchen</a></h5>
-										</div>
-										<address> <span>Type of food : </span> BreakFast, Cold Coffee, Dinner,
-											Drum
-											Stick,
-											Hot Dogs</address>
-										<div class="delivery-potions">
-											<div class="post-time">
-												<i class="icon-motorcycle"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Delivery
-															time</b> <b class="tooltip-info">Your order will be
-															delivered
-															in
-															10 minutes.</b> </div>
+										<div class="text-holder">
+											<div class="list-option">
+												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i></a>
+											</div>
+											<div class="post-title">
+												<h5>
+													<a href="listing-detail.html">{{ restaurant }}</a>
+												</h5>
+											</div>
+											<address> <span>Type of food : </span> BreakFast, Cold Coffee, Dinner,
+												Drum
+												Stick,
+												Hot Dogs</address>
+											<div class="delivery-potions">
+												<div class="post-time">
+													<i class="icon-motorcycle"></i>
+													<div class="time-tooltip">
+														<div class="time-tooltip-holder"> <b class="tooltip-label">Delivery
+																time</b> <b class="tooltip-info">Your order will be
+																delivered
+																in
+																10 minutes.</b> </div>
+													</div>
+												</div>
+												<div class="post-time">
+													<i class="icon-clock4"></i>
+													<div class="time-tooltip">
+														<div class="time-tooltip-holder"> <b class="tooltip-label">Pickup
+																time</b> <b class="tooltip-info">You can pickup
+																order in 15
+																minutes.</b> </div>
+													</div>
 												</div>
 											</div>
-											<div class="post-time">
-												<i class="icon-clock4"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Pickup
-															time</b> <b class="tooltip-info">You can pickup
-															order in 15
-															minutes.</b> </div>
+											{% if restaurant.user_profile.city and restaurant.user_profile.state and restaurant.user_profile.pin_code %}
+												<span class="location">{{ restaurant.user_profile.city }}, {{ restaurant.user_profile.state}}, {{ restaurant.user_profile.pin_code}}</span>
+											{% endif %}
+												<div class="list-rating">
+												<div class="rating-star">
+													<span class="rating-box" style="width: 100%;"></span>
 												</div>
+												<span class="reviews">(80)</span>
 											</div>
+											<span class="restaurant-status close">Close</span>
 										</div>
-										<span class="location">Scotland</span>
-										<div class="list-rating">
-											<div class="rating-star">
-												<span class="rating-box" style="width: 100%;"></span>
-											</div>
-											<span class="reviews">(80)</span>
-										</div>
-										<span class="restaurant-status close">Close</span>
 									</div>
-								</div>
-							</li>
-							<li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<div class="list-post featured">
-									<div class="img-holder">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/fb-subheader-1-1024x229-359x212.jpg'%}" alt="">
-											</a>
-											<figcaption>
-												<a href="#"><img src="{% static 'extra-images/goldenchick.png'%}" alt=""> </a>
-											</figcaption>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="list-option">
-											<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-										</div>
-										<div class="post-title">
-											<h5>
-												<a href="#">Golden Chick Fries</a>
-												<span class="sponsored text-color">Sponsored</span>
-											</h5>
-										</div>
-										<address> <span>Type of food : </span> Doughnut, Hot Dogs, Nightlife,
-											Noodles
-										</address>
-										<div class="delivery-potions">
-											<div class="post-time">
-												<i class="icon-motorcycle"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Delivery
-															time</b> <b class="tooltip-info">Your order will be
-															delivered
-															in
-															10 minutes.</b> </div>
-												</div>
-											</div>
-											<div class="post-time">
-												<i class="icon-clock4"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Pickup
-															time</b> <b class="tooltip-info">You can pickup
-															order in 15
-															minutes.</b> </div>
-												</div>
-											</div>
-										</div>
-										<span class="location">England</span>
-										<div class="list-rating">
-											Reviews Coming Soon </div>
-										<span class="restaurant-status close">Close</span>
-									</div>
-								</div>
-							</li>
+								</li>
+							{% endfor %}
+							
 							<li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
 								<div class="list-post ">
 									<div class="img-holder">
@@ -478,269 +448,18 @@
 					<div class="company-holder fancy">
 						<div class="swiper-container">
 							<div class="swiper-wrapper">
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/coffee.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Premium Coffee</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/wendy.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Wendy’s Cafe</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/mcdonals.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">McDonald’s</a> </h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/nando.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Nando’s</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/juicy.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Juicy Power</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/menu-1.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Bakery Cookies</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/jet.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Jet’s Kitchen</a></h6>
-										</div>
-										<div class="company-rating">
-											<div class="rating-star">
-												<span class="rating-box" style="width: 100%;"></span>
-											</div>
-											<span class="reviews">(1)</span>
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/goldenchick.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Golden Chick Fries</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
 
-											</div>
-										</div>
-									</div>
-								</div>
 								<div class="swiper-slide">
 									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/dragon.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Dragon Express</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/healthy.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Healthy Food</a></h6>
-										</div>
-										<div class="company-rating">
-											<div class="rating-star">
-												<span class="rating-box" style="width: 100%;"></span>
-											</div>
-											<span class="reviews">(1)</span>
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/meatlover.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Meat Lovers</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/bking.png'%}" alt=""> </a>
-										</figure>
-									</div>
-
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Burger King</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/domino.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">Domino’s Pizza</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="swiper-slide">
-									<div class="company-logo">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/kfc.png'%}" alt=""> </a>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="post-title">
-											<h6><a href="#">KFC – Kentucky</a></h6>
-										</div>
-										<div class="company-rating">
-											Reviews Coming Soon
-											<div class="list-option">
-												<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-											</div>
-										</div>
-									</div>
+										{% for restaurant in restaurants %}
+											<figure>
+												{% if Restaurant.user_profile.profile_picture %}
+													<a href="#"><img src="{{ Restaurant.user_profile.profile_picture.url }}" alt=""> </a>
+												{% else %}
+													<a href="#"><img src="{% static 'images/default-profile.png' %}" alt=""> </a>
+												{% endif %}
+											</figure>
+										{% endfor %}
 								</div>
 							</div>
 						</div>

@@ -10,6 +10,7 @@ class Restaurant(models.Model):
     user_profile = models.OneToOneField(
         UserProfile, related_name='userprofile', on_delete=models.CASCADE)
     Restaurant_name = models.CharField(max_length=50)
+    restaurant_slug = models.SlugField(max_length=100, unique=True)
     Restaurant_license = models.ImageField(upload_to='Restaurant/license')
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

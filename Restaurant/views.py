@@ -22,7 +22,10 @@ def get_restaurant(request):
     return restaurant
 
 
+# Ensure the user is logged in. If not, redirect to the login page.
 @login_required(login_url='login')
+# Check if the user passes the 'check_role_Restaurant' test.
+# This test can verify the user's role, and if it fails, it returns a 403 Forbidden response.
 @user_passes_test(check_role_Restaurant)  # 403 Forbidden
 def Restaurant_profile(request):
 
@@ -42,6 +45,7 @@ def Restaurant_profile(request):
             return redirect('Restaurant_profile')
 
         else:
+            # Print form errors for debugging purposes
             print(profile_form.errors)
             print(Restaurant_form.errors)
     else:
@@ -60,7 +64,7 @@ def Restaurant_profile(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def menu_builder(request):
     restaurant = Restaurant.objects.get(user=request.user)
     categories = Category.objects.filter(
@@ -72,7 +76,7 @@ def menu_builder(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def foodItems_by_category(request, pk=None):
 
     # Assuming 'Restaurant' and 'FoodItem' models are imported correctly
@@ -95,61 +99,73 @@ def foodItems_by_category(request, pk=None):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def add_category(request):
     if request.method == 'POST':
+        # Create a CategoryForm instance and bind it with POST data
         form = CategoryForm(request.POST)
 
         if form.is_valid():
-            category_name = form.cleaned_data['category_name']
+            # If the form data is valid, save it as a new Category instance
             category = form.save(commit=False)
             category.restaurant = Restaurant.objects.get(user=request.user)
-            category.slug = slugify(category_name)+'-'+str(category.id)
-            category.category_name = category_name.title()
-            form.save()
+            # Generate the slug based on the category name and ID after saving
+            category.slug = slugify(
+                form.cleaned_data['category_name']) + '-' + str(category.id)
+            # Capitalize the category name for uniformity
+            category.category_name = form.cleaned_data['category_name'].title()
+            category.save()  # Save the new category instance
             messages.success(request, 'Category added Successfully!')
+            # Redirect to the menu_builder view
             return redirect('menu_builder')
         else:
+            # Handle form errors, e.g., log or display errors
             print(form.errors)
     else:
+        # Create an empty form instance for adding a new category
         form = CategoryForm()
 
-    context = {
-        'form': form,
-    }
+    # Prepare the context for rendering the 'add_category' template with the form
+    context = {'form': form}
     return render(request, 'restaurant/add_category.html', context)
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def edit_category(request, pk=None):
-    # Use 'Category' instead of 'category' in get_object_or_404
+    # Fetch the Category instance based on the provided primary key
     category_obj = get_object_or_404(Category, pk=pk)
 
+    # Assign a default instance of the CategoryForm
+    form = CategoryForm(request.POST or None, instance=category_obj)
+
     if request.method == 'POST':
-        form = CategoryForm(request.POST, instance=category_obj)
+
         if form.is_valid():
-            category_name = form.cleaned_data['category_name']
+            # Update category details if the form data is valid
             category = form.save(commit=False)
+            # Assign the restaurant to the updated category
             category.restaurant = Restaurant.objects.get(user=request.user)
-            category.slug = slugify(category_name) + '-' + str(category.id)
-            category.category_name = category_name.title()
-            form.save()
+            # Generate the slug based on the updated category name and ID
+            category.slug = slugify(
+                form.cleaned_data['category_name']) + '-' + str(category.id)
+            # Capitalize the category name for uniformity
+            category.category_name = form.cleaned_data['category_name'].title()
+            form.save()  # Save the updated category instance
             messages.success(request, 'Category updated successfully!')
+            # Redirect to the menu_builder view
             return redirect('menu_builder')
         else:
+            # Handle form errors, e.g., log or display errors
             print(form.errors)
-    else:
-        form = CategoryForm(instance=category_obj)
-    context = {
-        'form': form,
-        'category': category_obj,
-    }
+
+    # Prepare the context for rendering the 'edit_category' template with form and category details
+    context = {'form': form, 'category': category_obj}
     return render(request, 'restaurant/edit_category.html', context)
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def delete_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
@@ -158,53 +174,66 @@ def delete_category(request, pk=None):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def add_food(request):
-    if request.method == 'POST':
-        form = FoodItemForm(request.POST, request.FILES)
+    form = FoodItemForm(request.POST or None, request.FILES or None)
 
+    if request.method == 'POST':
+        # If it's a POST request, process the form data
         if form.is_valid():
-            foodtitle = form.cleaned_data['food_title']
+            # If form data is valid, save it as a new FoodItem instance
             food = form.save(commit=False)
-            food.restaurant = Restaurant.objects.get(user=request.user)
-            food.slug = slugify(foodtitle)
-            form.save()
-            messages.success(request, 'Food item added Successfully!')
+            # Assign the restaurant using get_object_or_404 for safety
+            food.restaurant = get_object_or_404(Restaurant, user=request.user)
+            # Generate the slug based on the food title
+            food.slug = slugify(form.cleaned_data['food_title'])
+            food.save()  # Save the FoodItem instance
+            # Display success message upon successful addition
+            messages.success(request, 'Food item added successfully!')
+            # Redirect to the specific category page after adding the food item
             return redirect('foodItems_by_category', food.category.id)
         else:
-            print(form.errors)
-    else:
-        form = FoodItemForm()
-        form.fields['category'].queryset = Category.objects.filter(
-            restaurant=get_restaurant(request))
-    context = {
-        'form': form,
-    }
+            # If form data is invalid, display an error message
+            messages.error(
+                request, 'Failed to add food item. Please check the form.')
+
+    # Filter the category queryset based on the logged-in user's restaurant
+    form.fields['category'].queryset = Category.objects.filter(
+        restaurant=get_restaurant(request))
+
+    # Prepare the context for rendering the 'add_food' template with the form
+    context = {'form': form}
     return render(request, 'restaurant/add_food.html', context)
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def edit_food(request, pk=None):
-    # Use 'Category' instead of 'category' in get_object_or_404
+    # Fetch the FoodItem instance based on the provided primary key
     food = get_object_or_404(FoodItem, pk=pk)
 
+    # Process the form data for updates if it's a POST request
     if request.method == 'POST':
         form = FoodItemForm(request.POST, request.FILES, instance=food)
         if form.is_valid():
-            foodtitle = form.cleaned_data['food_title']
+            # Update food details if the form data is valid
             food = form.save(commit=False)
-            food.restaurant = Restaurant.objects.get(user=request.user)
-            food.slug = slugify(foodtitle)
-            form.save()
+            food.restaurant = get_object_or_404(Restaurant, user=request.user)
+            # Generate the slug based on the updated food title
+            food.slug = slugify(form.cleaned_data['food_title'])
+            form.save()  # Save the updated food instance
             messages.success(request, 'Food Item updated successfully!')
             return redirect('foodItems_by_category', food.category.id)
         else:
-            print(form.errors)
+            # Handle form errors, e.g., log or display errors
+            print(form.errors)   # Temporary: Print form errors to console
     else:
+        # If it's a GET request, populate the form with the existing food item data
         form = FoodItemForm(instance=food)
+        # Filter the category queryset based on the logged-in user's restaurant
         form.fields['category'].queryset = Category.objects.filter(
             restaurant=get_restaurant(request))
+     # Prepare the context for rendering the template with the form and food item details
     context = {
         'form': form,
         'food': food,
@@ -213,9 +242,12 @@ def edit_food(request, pk=None):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_Restaurant)  # 403 Forbidden
+@user_passes_test(check_role_Restaurant)
 def delete_food(request, pk=None):
+    # Get the specific FoodItem instance using the provided primary key.
     food = get_object_or_404(FoodItem, pk=pk)
-    food.delete()
+    food.delete()  # Delete the retrieved FoodItem instance.
+    # Display a success message to the user indicating successful deletion.
     messages.success(request, 'Food item has been deleted successfully!')
+    # Redirect the user to the 'foodItems_by_category' view
     return redirect('foodItems_by_category', food.category.id)
