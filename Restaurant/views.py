@@ -109,12 +109,13 @@ def add_category(request):
             # If the form data is valid, save it as a new Category instance
             category = form.save(commit=False)
             category.restaurant = Restaurant.objects.get(user=request.user)
-            # Generate the slug based on the category name and ID after saving
-            category.slug = slugify(
-                form.cleaned_data['category_name']) + '-' + str(category.id)
             # Capitalize the category name for uniformity
             category.category_name = form.cleaned_data['category_name'].title()
-            category.save()  # Save the new category instance
+            category.save()  # category id will be generated
+            category.slug = slugify(
+                # category name - slug id
+                form.cleaned_data['category_name']) + '-' + str(category.id)
+            category.save()
             messages.success(request, 'Category added Successfully!')
             # Redirect to the menu_builder view
             return redirect('menu_builder')
@@ -186,7 +187,9 @@ def add_food(request):
             # Assign the restaurant using get_object_or_404 for safety
             food.restaurant = get_object_or_404(Restaurant, user=request.user)
             # Generate the slug based on the food title
-            food.slug = slugify(form.cleaned_data['food_title'])
+            food.save()
+            food.slug = slugify(
+                form.cleaned_data['food_title'])+'-'+str(food.id)
             food.save()  # Save the FoodItem instance
             # Display success message upon successful addition
             messages.success(request, 'Food item added successfully!')

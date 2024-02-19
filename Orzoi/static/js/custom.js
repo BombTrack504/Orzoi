@@ -5,7 +5,6 @@ autocomplete = new google.maps.places.Autocomplete(
     document.getElementById('id_address'),
     {
         types: ['geocode', 'establishment'],
-        //default in this app is "IN" - add your country code
         componentRestrictions: {'country': ['np']},
     })
 // function to specify what should happen when the prediction is clicked
@@ -20,7 +19,7 @@ function onPlaceChanged (){
         document.getElementById('id_address').placeholder = "Start typing...";
     }
     else{
-       // console.log('place name=>', place.name)
+       //console.log('place name=>', place.name)
     }
     // get the address components and assign them to the fields
     //console.log(place)

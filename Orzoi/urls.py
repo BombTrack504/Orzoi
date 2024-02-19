@@ -14,5 +14,7 @@ urlpatterns = [
     # CART
     path('cart/', MarkeetplaceViews.cart, name='cart'),
 
+    # Search
+    path('search/', MarkeetplaceViews.search, name='search'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,7 +6,7 @@ from Restaurant.models import Restaurant
 
 class Category(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=50, unique=True)
+    category_name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

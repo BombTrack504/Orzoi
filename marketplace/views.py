@@ -3,14 +3,21 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from menu.models import Category, FoodItem
 
+from django.shortcuts import redirect
 from Restaurant.models import Restaurant
 from django.db.models import Prefetch
 
 from django.http import JsonResponse
 from . models import FoodCart
 
+from django.http import HttpResponse
 from . context_processors import get_cart_counter,  get_cart_amt
 from django.contrib.auth.decorators import login_required
+
+from django.db.models import Q
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
 # Create your views here.
 
 
@@ -181,3 +188,45 @@ def delete_cart(request, cart_id):
             'status': 'Failed',
             'message': 'Invalid request!'
         })
+
+
+def search(request):
+    if not 'address' in request.GET:
+        return redirect('marketplace')
+    else:
+        address = request.GET['address']
+        latitude = request.GET['lat']
+        longitude = request.GET['lng']
+        radius = request.GET['radius']
+        keyword = request.GET['keyword']
+
+        # get restaurant ids that has the food item the user is looking for
+        fetch_restaurants_by_fooditems = FoodItem.objects.filter(
+            food_title__icontains=keyword, is_available=True,).values_list('restaurant', flat=True)
+        # print(fetch_restaurants_by_fooditems)
+        restaurants = Restaurant.objects.filter(
+            Q(id__in=fetch_restaurants_by_fooditems) | Q(Restaurant_name__icontains=keyword, is_approved=True, user__is_active=True))
+        # print(restaurants)
+
+        if latitude and longitude and radius:
+            pnt = GEOSGeometry('POINT(%s %s)' % (longitude, latitude))
+
+            restaurants = Restaurant.objects.filter(Q(id__in=fetch_restaurants_by_fooditems) | Q(
+                Restaurant_name__icontains=keyword, is_approved=True, user__is_active=True),
+                user_profile__location__distance_lte=(pnt, D(km=radius))
+            ).annotate(distance=Distance("user_profile__location", pnt)).order_by("distance")
+
+            for r in restaurants:
+                r.kms = round(r.distance.km, 1)
+
+        res_count = restaurants.count()
+        context = {
+            'restaurants': restaurants,
+            'res_count': res_count,
+            'source_location': address,
+        }
+
+        # print(address, latitude, longitude, radius)
+        # return HttpResponse('search page')
+
+        return render(request, 'marketplace/listings.html', context)
