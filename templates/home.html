@@ -26,8 +26,8 @@
 												<span class="restaurant-element-search-btn"> <i class="icon-search5"></i> </span>
 												<div class="select-location">
 													<div class="foodbakery-locations-fields-group foodbakery-focus-out">
-														<span id="foodbakery_radius_location_open333" class="foodbakery-radius-location"><i class="icon-target5"></i></span>
-														<input type="text" name="restaurant_name"  class="location-field-text filter" placeholder="All Locations">
+														<input type="text" value="" name="location" id="location" class="location-field-text filter" placeholder="Your current location" autocomplete="off">
+														<span id="foodbakery_radius_location_open333" class="foodbakery-radius-location" onclick="getLocation()"><i class="icon-target5"></i></span>
 													</div>
 													<input value="Search" type="submit">
 												</div>
@@ -267,7 +267,7 @@
 									<div class="list-post ">
 										<div class="img-holder">
 											<figure>
-												<a href="#" style="height: 170px; margin-top:10px;">
+												<a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" style="height: 170px; margin-top:10px;">
 													{% if restaurant.user_profile.cover_photo %}
 														<img src="{{ restaurant.user_profile.cover_photo.url }}" alt="">
 													{% else %}
@@ -275,7 +275,7 @@
 													{% endif %}
 												</a>
 												<figcaption>
-													<a href="#">
+													<a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}">
 													{% if restaurant.user_profile.profile_picture %}
 														<img src="{{ restaurant.user_profile.profile_picture.url }}" alt="">
 													{% else %}
@@ -291,7 +291,7 @@
 											</div>
 											<div class="post-title">
 												<h5>
-													<a href="listing-detail.html">{{ restaurant }}</a>
+													<a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}">{{ restaurant }}</a>
 												</h5>
 											</div>
 											<address> <span>Type of food : </span> BreakFast, Cold Coffee, Dinner,
@@ -322,6 +322,11 @@
 											{% if restaurant.user_profile.city and restaurant.user_profile.state and restaurant.user_profile.pin_code %}
 												<span class="location">{{ restaurant.user_profile.city }}, {{ restaurant.user_profile.state}}, {{ restaurant.user_profile.pin_code}}</span>
 											{% endif %}
+
+											{% if restaurant.kms%}
+												<br>
+												<span><small><b>{{restaurant.kms}}</b>km away from you.</small></span>
+											{% endif %}
 												<div class="list-rating">
 												<div class="rating-star">
 													<span class="rating-box" style="width: 100%;"></span>
@@ -334,53 +339,7 @@
 								</li>
 							{% endfor %}
 							
-							<li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<div class="list-post ">
-									<div class="img-holder">
-										<figure>
-											<a href="#"><img src="{% static 'extra-images/fb-subheader-3-1024x229-359x212.jpg'%}" alt=""></a>
-											<figcaption>
-												<a href="#"><img src="{% static 'extra-images/dragon.png'%}" alt=""> </a>
-											</figcaption>
-										</figure>
-									</div>
-									<div class="text-holder">
-										<div class="list-option">
-											<a href="#" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart-o"></i> </a>
-										</div>
-										<div class="post-title">
-											<h5><a href="#">Dragon Express</a></h5>
-										</div>
-										<address> <span>Type of food : </span> BreakFast, Delivery, Dinner,
-											Nightlife
-										</address>
-										<div class="delivery-potions">
-											<div class="post-time">
-												<i class="icon-motorcycle"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Delivery
-															time</b> <b class="tooltip-info">Your order will be
-															delivered
-															in
-															10 minutes.</b> </div>
-												</div>
-											</div>
-											<div class="post-time">
-												<i class="icon-clock4"></i>
-												<div class="time-tooltip">
-													<div class="time-tooltip-holder"> <b class="tooltip-label">Pickup
-															time</b> <b class="tooltip-info">You can pickup
-															order in 15
-															minutes.</b> </div>
-												</div>
-											</div>
-										</div>
-										<span class="location">England</span>
-										<div class="list-rating">Reviews Coming Soon </div>
-										<span class="restaurant-status open">Open</span>
-									</div>
-								</div>
-							</li>
+							
 						</ul>
 					</div>
 				</div>
