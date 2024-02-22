@@ -15,6 +15,7 @@ from . context_processors import get_cart_counter,  get_cart_amt
 from django.contrib.auth.decorators import login_required
 
 from django.db.models import Q
+
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance

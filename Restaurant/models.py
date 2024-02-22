@@ -1,6 +1,9 @@
 from django.db import models
 from accounts.models import User, UserProfile
 from accounts.utils import send_notfication
+
+from datetime import time
+
 # Create your models here.
 
 
@@ -38,3 +41,25 @@ class Restaurant(models.Model):
                     mail_subject = "we're sorry! you are not eligible for publishing your restaurant in our marketplace"
                     send_notfication(mail_subject, mail_template, context)
         return super(Restaurant, self).save(*args, **kwargs)
+
+
+DAYS = [
+    (1, ("Sunday")),
+    (2, ("Monday")),
+    (3, ("Tuesday")),
+    (4, ("Wednesday")),
+    (5, ("Thursday")),
+    (6, ("Friday")),
+    (7, ("Saturday")),
+]
+
+HOURS = [(time(h, m).strftime('%I:%M %p'), time(h, m).strftime('%I:%M %p'))
+         for h in range(0, 24) for m in range(0, 60, 30)]
+
+
+class OpeningHour(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    day = models.IntegerField(choices=DAYS)
+    from_hour = models.CharField()
+    to_hour = models.CharField()
+    is_closed = models.BooleanField(default=False)
