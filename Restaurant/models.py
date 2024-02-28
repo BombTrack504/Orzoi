@@ -35,13 +35,14 @@ class Restaurant(models.Model):
 
         is_open = None
         for i in current_opening_hour:
-            start = str(datetime.strptime(i.from_hour, "%I:%M %p").time())
-            end = str(datetime.strptime(i.to_hour, "%I:%M %p").time())
+            if not i.is_closed:
+                start = str(datetime.strptime(i.from_hour, "%I:%M %p").time())
+                end = str(datetime.strptime(i.to_hour, "%I:%M %p").time())
 
-            if current_time > start and current_time < end:
-                is_open = True
-            else:
-                is_open = False
+                if current_time > start and current_time < end:
+                    is_open = True
+                else:
+                    is_open = False
         return is_open
 
     def save(self, *args, **kwargs):
