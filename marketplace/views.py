@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from menu.models import Category, FoodItem
 
 from django.shortcuts import redirect
-from Restaurant.models import Restaurant
+from Restaurant.models import Restaurant, OpeningHour
 from django.db.models import Prefetch
 
 from django.http import JsonResponse
@@ -19,6 +19,10 @@ from django.db.models import Q
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
+
+from datetime import date
+from django.utils import timezone
+from datetime import datetime
 # Create your views here.
 
 
@@ -47,6 +51,17 @@ def restaurant_detail(request, restaurant_slug):
                 queryset=FoodItem.objects.filter(is_available=True)
             )
     )
+
+    opening_hour = OpeningHour.objects.filter(
+        restaurant=restaurant_detail).order_by('day', '-from_hour')
+
+    # check current day opening hour
+    today_date = date.today()
+    today = today_date.isoweekday()
+
+    current_opening_hour = OpeningHour.objects.filter(
+        restaurant=restaurant_detail, day=today)
+
     cart_items = (
         FoodCart.objects.filter(user=request.user)
         if request.user.is_authenticated
@@ -58,6 +73,8 @@ def restaurant_detail(request, restaurant_slug):
             ('restaurant_detail', restaurant_detail),
             ('categories', categories),
             ('cart_items', cart_items),
+            ('opening_hour', opening_hour),
+            ('current_opening_hour', current_opening_hour),
             # Add more key-value pairs here if needed
         ]
     }

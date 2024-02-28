@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'menu',
     'marketplace',
     'django.contrib.gis',
+    # 'captcha',
+
 ]
 
 MIDDLEWARE = [
@@ -165,6 +167,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = ''
+
 
 GOOGLE_API_KEY = ''
 

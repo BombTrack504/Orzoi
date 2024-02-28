@@ -26,7 +26,7 @@
 												<span class="restaurant-element-search-btn"> <i class="icon-search5"></i> </span>
 												<div class="select-location">
 													<div class="foodbakery-locations-fields-group foodbakery-focus-out">
-														<input type="text" value="" name="location" id="location" class="location-field-text filter" placeholder="Your current location" autocomplete="off">
+														<input type="text" value="" name="location" id="id_address" class="location-field-text filter" placeholder="Your current location" autocomplete="off">
 														<span id="foodbakery_radius_location_open333" class="foodbakery-radius-location" onclick="getLocation()"><i class="icon-target5"></i></span>
 													</div>
 													<input value="Search" type="submit">
@@ -333,7 +333,11 @@
 												</div>
 												<span class="reviews">(80)</span>
 											</div>
-											<span class="restaurant-status close">Close</span>
+											{% if restaurant.is_open%}
+												<span class="restaurant-status close" style="background-color: green;">Open</span>
+											{% else %}
+												<span class="restaurant-status close">Close</span>
+											{% endif %}
 										</div>
 									</div>
 								</li>

@@ -13,7 +13,7 @@
                     <p class="text-center">Please fill this form to get yourself onboarded in the foodOnline marketplace.</p>
                     <hr>
                     <div id="restaurant-sets-holder">
-                        <form action="{% url 'registerUser' %}" class="form-fields-set foodbakery-dev-restaurant-form" method="post">
+                        <form action="{% url 'registerUser' %}" class="form-fields-set foodbakery-dev-restaurant-form" method="post" enctype="multipart/form-data" onsubmit="return validatePassword()">
                             {% csrf_token %}
                             <ul class="register-add-restaurant-tab-container restaurant-information-tab-container">
                                 <li>
@@ -49,13 +49,21 @@
                                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="field-holder">
                                                                 <label>Password</label>
-                                                                {{form.password}}
+                                                                <input type="password" id="password" name="password" placeholder="Enter Password" class="form-control">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-outline-secondary" type="button" id="tp1" style="margin-top: 10px;margin-right:4px;">Show</button>
+                                                                    </div>
+                                                                <!-- {{form.password}} -->
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                             <div class="field-holder">
                                                                 <label>Confirm Password</label>
-                                                                {{form.confirm_password}}
+                                                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Enter confirm Password" class="form-control">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-outline-secondary" type="button" id="tp2" style="margin-top: 10px;margin-right:4px;">Show</button>
+                                                                    </div>
+                                                                <!-- {{form.confirm_password}} -->
                                                             </div>
                                                         </div>
                                                     </li>
@@ -104,4 +112,46 @@
     </div>
 </div>
 <!-- Main Section End -->
+
+<script>
+    function validatePassword() {
+        var password = document.getElementById("password").value;
+        // Regular expressions to check for at least one alphabet, one number, and one special character
+        var alphabetRegex = /[a-zA-Z]/;
+        var numberRegex = /[0-9]/;
+        var specialCharRegex = /[^a-zA-Z0-9]/;
+        // Check if the password meets the conditions
+        if (password.length < 6 || !alphabetRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
+            alert("Password must be at least 6 characters long and contain at least one alphabet, one number, and one special character.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>
+
+<script>
+    // Toggle password visibility
+  document.getElementById("tp1").addEventListener("click", function() {
+    var passwordInput = document.getElementById("password");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      this.textContent = "Hide";
+    } else {
+      passwordInput.type = "password";
+      this.textContent = "Show";
+    }
+    });
+
+    // Toggle repeat password visibility
+    document.getElementById("tp2").addEventListener("click", function() {
+    var confirmPasswordInput = document.getElementById("confirm_password");
+    if (confirmPasswordInput.type === "password") {
+        confirmPasswordInput.type = "text";
+        this.textContent = "Hide";
+    } else {
+        confirmPasswordInput.type = "password";
+        this.textContent = "Show";
+    }
+    });
+</script>
 {% endblock content %}

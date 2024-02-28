@@ -13,38 +13,10 @@
 						<div class="main-nav">
 							<nav id="site-navigation" class="main-navigation">
 								<ul class="fancy-left-menu">
-									<li class="menu-item-has-children">
-										<a href="#">Foods</a>
-										<ul>
-											<li><a href="index.html">Chinese</a></li>
-											<li><a href="#">Mexican</a></li>
-											<li><a href="#">Nepali</a></li>
-											<li><a href="#">Korean</a></li>
-											<li><a href="#">Indian</a></li>
-										</ul>
+									
+									<li><a href="listings.html">Carrer</a>
 									</li>
-									<li><a href="listings.html">Restaurants</a>
-									</li>
-									<li class="menu-item-has-children">
-										<a href="#">Pages</a>
-										<ul>
-											<li><a href="price-plans.html">Price
-													Plans</a></li>
-											<li><a href="contact-us.html">Contact</a>
-											</li>
-											<li><a href="faq.html">Frequently
-													Asked
-													Question’s</a></li>
-											<li><a href="how-it-works.html">How
-													it
-													works</a></li>
-											<li><a href="registration.html">Register</a>
-											</li>
-											<li><a href="search-result.html">Search
-													Result</a></li>
-										</ul>
-										<!--End Sub Menu -->
-									</li>
+									
 									<li id="menu-item-15871" >
 										<a href="{% url 'marketplace' %}" class="get-start-btn">Marketplace</a>
 										<!--End Sub Menu -->
@@ -98,7 +70,7 @@
 		</header>
 		<!-- Header End -->
 		<script>
-			var x = document.getElementById("location");
+			var x = document.getElementById("id_address");
 			var current_location =  sessionStorage.getItem("current_location")
 			if (current_location != ""){
 				x.value = current_location;
