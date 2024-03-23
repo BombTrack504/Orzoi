@@ -70,7 +70,7 @@
 		</header>
 		<!-- Header End -->
 		<script>
-			var x = document.getElementById("id_address");
+			var x = document.getElementById("location");
 			var current_location =  sessionStorage.getItem("current_location")
 			if (current_location != ""){
 				x.value = current_location;
@@ -90,9 +90,11 @@
 				//console.log(position);
 				//var lat = position.coords.latitude
 				//var lng = position.coords.longitude
+				var lat = position.coords.latitude
+        		var lng = position.coords.longitude
 
-				var lat = '28.2299257'
-				var lng = '83.7914607'
+				//var lat = '28.2299257'
+				//var lng = '83.7914607'
 
 				//hit ajax request to googlemaps api endpoint and get the location data using those lat and lng
 				

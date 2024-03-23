@@ -25,22 +25,29 @@ def detectUser(user):
 
 # call from registeruser fun and registerRestaurant fun
 def send_verification_email(request, user, mail_subject, email_template):
+    # Get the default sender email address
     from_email = settings.DEFAULT_FROM_EMAIL
+    # Get the current site domain
     current_site = get_current_site(request)
+
+    # Render the email message template with necessary context data
     message = render_to_string(email_template, {
-        'user': user,
-        'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'user': user,  # User object
+        'domain': current_site,   # Current site domain
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),  # Encoded user ID
+        # Token for verification
         'token': default_token_generator.make_token(user),
     })
-    to_email = user.email
+    to_email = user.email  # get user email
     mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
     mail.send()
 
 
 def send_notfication(mail_subject, mail_template, context):
     from_email = settings.DEFAULT_FROM_EMAIL
+    # Render the email message template with the provided context data
     message = render_to_string(mail_template, context)
+    # Get the recipient's email address from the context
     to_email = context['user'].email
     mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
     mail.send()

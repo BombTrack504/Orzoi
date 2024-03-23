@@ -4,6 +4,8 @@ from django.db.models.fields.related import ForeignKey, OneToOneField
 
 from django.contrib.gis.db import models as gismodels
 from django.contrib.gis.geos import Point
+
+
 # Custom user manager
 
 
@@ -14,7 +16,7 @@ class UserManager(BaseUserManager):
 
         if not username:
             raise ValueError("User name must not be null!!")
-
+        # Create a new user instance with normalized email and provided details
         user = self.model(
             email=self.normalize_email(email),
             username=username,
@@ -22,9 +24,9 @@ class UserManager(BaseUserManager):
             last_name=last_name,
         )
 
-        # convert password into SHA256 format (encryption)
+        # Set password using SHA256 encryption
         user.set_password(password)
-
+        # Save the user to the database
         user.save(using=self._db)
         return user
 
@@ -40,6 +42,7 @@ class UserManager(BaseUserManager):
         user.is_active = True
         user.is_staff = True
         user.is_superuser = True
+        # Save the superuser to the database
         user.save(using=self._db)
         return user
 
@@ -53,6 +56,7 @@ class User(AbstractBaseUser):
         (RESTAURANT, 'Restaurant'),
         (CUSTOMER, 'Customer'),
     )
+    # user fields
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50, unique=True)
@@ -73,17 +77,21 @@ class User(AbstractBaseUser):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
+    # Define the email field as the unique identifier for authentication
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
+    # Use UserManager for managing user objects
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.email  # Return the user's email as the string representation
 
+    # Method to check if user has a specific permission
     def has_perm(self, perm, obj=None):
         return self.is_admin
 
+    # Method to check if user has permissions for a specific app module
     def has_module_perms(self, app_label):
         return True
 
@@ -96,8 +104,11 @@ class User(AbstractBaseUser):
 
 
 class UserProfile(models.Model):
+    # One-to-One relationship with User model
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, blank=True, null=True)
+
+    # Fields for user profile information
     profile_picture = models.ImageField(
         upload_to='user/profile_pictures', blank=True, null=True)
     cover_photo = models.ImageField(
@@ -109,7 +120,8 @@ class UserProfile(models.Model):
     pin_code = models.CharField(max_length=6, blank=True, null=True)
     latitude = models.CharField(max_length=20, blank=True, null=True)
     longitude = models.CharField(max_length=20, blank=True, null=True)
-    location = gismodels.PointField(blank=True, null=True, srid=4326)
+    location = gismodels.PointField(
+        blank=True, null=True, srid=4326)  # Geographical fields
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -117,10 +129,12 @@ class UserProfile(models.Model):
     #     return f'{self.address_line_1}, {self.address_line_2}'
 
     def str(self):
-        return self.user.email
+        return self.user.email  # Return the email of associated user as string representation
 
     def save(self, *args, **kwargs):
+        # If latitude and longitude are provided, create a Point object for location
         if self.latitude and self.longitude:
             self.location = Point(float(self.longitude), float(self.latitude))
             return super(UserProfile, self).save(*args, **kwargs)
+        # Call the save method of the superclass
         return super(UserProfile, self).save(*args, **kwargs)

@@ -1,6 +1,7 @@
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.conf import settings
 
 
 from Restaurant.forms import RestaurantForm
@@ -15,9 +16,12 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 # Restrict the Restaurant from accessing the customer
 from django.template.defaultfilters import slugify
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+from django import forms
 
 
-def check_role_Restaurant(user):
+def check_role_Restaurant(user):  # check restaurant
     if user.role == 1:
         return True
     else:
@@ -26,31 +30,49 @@ def check_role_Restaurant(user):
 # Restrict the Customer from accessing the Restaurant page
 
 
-def check_role_Customer(user):
+def check_role_Customer(user):  # check customer
     if user.role == 2:
         return True
     else:
         raise PermissionDenied
+# Restrict the restaurant from accessing the Customer page
 
 
 def registerUser(request):
 
+    # check if user is authemticated or not
     if request.user.is_authenticated:
         messages.warning(request, 'you are already logged in!')
+        # if user already authenticated redirect to respective dashboard
         return redirect('dashboard')
 
     elif request.method == 'POST':
         form = UserForm(request.POST)
-        if form.is_valid():
+
+        # Initializes a ReCaptchaField instance with a widget (ReCaptchaV2Checkbox)
+        captcha = request.POST.get('g-recaptcha-response')
+        captcha_field = ReCaptchaField(
+            widget=ReCaptchaV2Checkbox, required=False)
+
+        # check recaptcha
+        try:
+            captcha_is_valid = captcha_field.clean(captcha)
+        except forms.ValidationError:
+            captcha_is_valid = False
+
+        if form.is_valid() and captcha_is_valid:
+            # password = form.cleaned_data['password']
             # user = form.save(commit=False)
             # user.role = User.CUSTOMER
             # User.save()
 
+            # Extracting clean data from form field
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            # Create a new user instance
             user = User.objects.create_user(
                 first_name=first_name, last_name=last_name, username=username, email=email, password=password)
             user.role = User.CUSTOMER
@@ -66,8 +88,65 @@ def registerUser(request):
                 request, 'Your account has been created. Successfully !')
             return redirect('registerUser')
         else:
-            print('invalid form')
+            if not captcha_is_valid:
+                messages.error(
+                    request, 'reCAPTCHA verification failed. Please try again.')
+
+            print('invalid form or captcha')
             print(form.errors)
+    else:
+        form = UserForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/registerUser.html', context)
+
+    if request.user.is_authenticated:
+        messages.warning(request, 'You are already logged in!')
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+
+        captcha = request.POST.get('g-recaptcha-response')
+        captcha_field = ReCaptchaField(
+            widget=ReCaptchaV2Checkbox, required=False)
+
+        # check reCAPTCHA
+        try:
+            captcha_is_valid = captcha_field.clean(captcha)
+        except forms.ValidationError:
+            captcha_is_valid = False
+
+        if form.is_valid() and captcha_is_valid:
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = User.objects.create_user(
+                first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            user.role = User.CUSTOMER
+            user.save()
+
+            # send verification email
+            mail_subject = 'Please activate your account'
+            email_template = 'accounts/emails/acc_verification_email.html'
+            send_verification_email(
+                request, user, mail_subject, email_template)
+
+            messages.success(
+                request, 'Your account has been created successfully!')
+            return redirect('registerUser')
+        else:
+            if not captcha_is_valid:
+                messages.error(
+                    request, 'reCAPTCHA verification failed. Please try again.')
+
+            messages.error(
+                request, 'Registration failed. Please correct the errors below.')
+
     else:
         form = UserForm()
 
@@ -88,20 +167,25 @@ def registerRestaurant(request):
         R_form = RestaurantForm(request.POST, request.FILES)
 
         if form.is_valid() and R_form.is_valid():
+            # Extract user data from UserForm
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            # Create a new user instance
             user = User.objects.create_user(
                 first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            # Extract user data from UserForm
             user.role = User.RESTAURANT
             user.save()
             Restaurant = R_form.save(commit=False)
             Restaurant.user = user
             restaurant_name = R_form.cleaned_data['Restaurant_name']
+            # Generate a unique slug for the restaurant
             Restaurant.restaurant_slug = slugify(
                 restaurant_name)+'-'+str(user.id)
+
             user_profile = UserProfile.objects.get(user=user)
             Restaurant.user_profile = user_profile
             Restaurant.save()
@@ -132,12 +216,14 @@ def registerRestaurant(request):
 def activate(request, uidb64, token):
     # activate the user by setting the is_active status to True
     try:
+        # Decode the base64-encoded uidb64 to get the user ID
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User._default_manager.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
+        # Set the is_active field of the user to True
         user.is_active = True
         user.save()
         messages.success(
@@ -149,19 +235,36 @@ def activate(request, uidb64, token):
 
 
 def login(request):
-
+    # Get the reCAPTCHA site key from settings
+    recaptcha_site_key = settings.RECAPTCHA_PUBLIC_KEY
     if request.user.is_authenticated:
         messages.warning(request, 'you are already logged in!')
         return redirect('myAccount')
 
     elif request.method == 'POST':
+        # If the request method is POST, process the login form data
+        # Get email and password from the POST data
         email = request.POST['email']
         password = request.POST['password']
+        captcha = request.POST.get('g-recaptcha-response')
+        captcha_field = ReCaptchaField(
+            widget=ReCaptchaV2Checkbox, required=False)
 
-        # check user exist
+        # check recaptcha validity
+        try:
+            captcha_is_valid = captcha_field.clean(captcha)
+        except forms.ValidationError:
+            captcha_is_valid = False
+
+        if not captcha_is_valid:
+            messages.error(
+                request, 'reCAPTCHA verification failed. Please try again.')
+            return redirect('login')
+
+        # Authenticate user using email and password
         user = auth.authenticate(email=email, password=password)
 
-        if user is not None:
+        if user is not None and captcha_is_valid:
             auth.login(request, user)
             messages.success(request, 'you are now logged in.')
             return redirect('myAccount')
@@ -169,7 +272,7 @@ def login(request):
         else:
             messages.error(request, 'invalid login credentials')
             return redirect('login')
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', {'recaptcha_site_key': recaptcha_site_key})
 
 
 def logout(request):
@@ -200,9 +303,10 @@ def Restaurantdashboard(request):
 
 def forgot_password(request):
     if request.method == 'POST':
+        # If the request method is POST, extract email from the POST data
         email = request.POST['email']
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():  # check if user exist
             user = User.objects.get(email__exact=email)
 
             # send reset password email

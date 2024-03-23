@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+    <!-- Main Section Start -->
+    <div class="main-section" style="margin-top: 140px;">
+        <div class="page-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        <div class="tabs-holder horizontal">
+                            <ul class="stickynav-tabs nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#home"><i class="fa fa-shopping-cart text-danger"></i>Review Your Billing Address</a></li> 
+                            </ul>
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane in active">
+                                    <div class="menu-itam-holder">
+                                        <div id="menu-item-list-6272" class="menu-itam-list">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- your order section -->
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="tabs-holder horizontal">
+                            <ul class="stickynav-tabs nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Your order</a></li>  
+                            </ul>
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane in active">
+                                    <div class="menu-itam-holder">
+                                        <div>
+                                            <ul>
+                                                <li style="list-style-type: none;">
+                                                    Subtotal
+                                                    <span class="price float-right">
+                                                        <span class="currency">Rs</span>
+                                                        <span id="subtotal">{{ subtotal }}</span>
+                                                    </span>
+                                                </li>
+
+                                                {% for key, value in tax_dict.items %}
+                                                    {% for i,j in value.items%}
+                                                        <li style="list-style-type: none;">
+                                                            {{ key }} <small>({{ i }}%)</small>
+                                                            <span class="price float-right">
+                                                                <span class="currency">Rs</span>
+                                                                <span id="tax-{{ key }}">{{ j }}</span>
+                                                            </span>
+                                                        </li>
+                                                    {% endfor %}
+                                                {% endfor %}
+
+                                                <li style="list-style-type: none; font-weight:600;">
+                                                    TOTAL
+                                                    <span class="price float-right">
+                                                        <span class="currency">Rs</span>
+                                                        <span id="grandtotal">{{ grandtotal }}</span>
+                                                    </span>
+                                                    
+                                                </li>
+                                                {% if Purcheses.payment_method == 'Khalti'%}
+                                                    <button id="payment-button" class="btn btn-success w-100"><strong>Pay with Khalti</strong></button>
+                                                {% endif %}
+                                                <!-- <a href="{% url 'checkout'%}" class="btn btn-danger w-100 p-2 mt-3">PROCCED TO CHECKOUT</a> -->
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Function to fetch the CSRF token from cookies
+    function getCookie(name){
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== ''){
+        const cookies = document.cookie.split(';');
+        for(let i = 0; i < cookies.length;i++){
+            const cookie = cookies[i].trim();
+            if(cookie.substring(0,name.length + 1)===(name + '=')){
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var total = "{{ total }}"
+    var url = "{% url 'payment' %}"
+    var order_number = "{{ purchases.order_number}}"
+    var buyer_name = "{{purchases.first_name}} {{purchases.last_name}}"
+    const csrftoken = getCookie('csrftoken');
+    var purchase_completion = "{% url 'purchase_completion' %}"
+
+    console.log('csrftoken===>',csrftoken)
+    // Render the PayPal button into #paypal-button-container
+
+    var config = {
+        // replace the publicKey with yours
+        "publicKey": "test_public_key_5a8766283a2f4eeca54b7434c427c536",
+        "productIdentity": order_number,
+        "productName": buyer_name,
+        "productUrl": "http://127.0.0.1:8000/",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+            ],
+        "eventHandler": {
+            onSuccess (payload) {
+                // hit merchant api for initiating verfication
+                console.log(payload);
+                const khalti_amount = payload.amount;
+                const khalti_token = payload.token;
+                $.ajax({
+                        url: '/items/verify-khalti-payment/',
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if using Django CSRF protection
+                        },
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            order_number: order_number,
+                            amount: khalti_amount,
+                            token: khalti_token
+                        }),
+                        success: function(data) {
+                            if (data.status === 'success') {
+                                    // Redirect to the cart page
+                                    window.location.href = '/cart/';
+                                }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Handle error if any
+                    }
+                });
+            },
+            onError (error) {
+                console.log(error);
+            },
+            onClose () {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        console.log("khalti clicked")
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({amount: total * 100});
+    }
+</script>
+{% endblock%}

@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'menu',
     'marketplace',
     'django.contrib.gis',
-    # 'captcha',
+    'django_recaptcha',
+    'customers',
+    'orders',
 
 ]
 
@@ -166,7 +168,7 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = ''
+DEFAULT_FROM_EMAIL = 'ORZOI <gaurabshrestha15901590@gamil.com>'
 
 
 GOOGLE_API_KEY = ''
@@ -179,3 +181,7 @@ os.environ['PROJ_LIB'] = os.path.join(
     BASE_DIR, 'env\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
 GDAL_LIBRARY_PATH = os.path.join(
     BASE_DIR, 'env\Lib\site-packages\osgeo\gdal304.dll')
+
+
+RECAPTCHA_PUBLIC_KEY = ''
+RECAPTCHA_PRIVATE_KEY = ''

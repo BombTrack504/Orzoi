@@ -17,4 +17,10 @@ urlpatterns = [
     # Search
     path('search/', MarkeetplaceViews.search, name='search'),
 
+    # Checkout
+    path('checkout/', MarkeetplaceViews.checkout, name='checkout'),
+
+    # ORDERS
+    path('orders/', include('orders.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

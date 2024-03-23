@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+from accounts.models import UserProfile
 from menu.models import Category, FoodItem
 
 from django.shortcuts import redirect
@@ -8,6 +9,8 @@ from Restaurant.models import Restaurant, OpeningHour
 from django.db.models import Prefetch
 
 from django.http import JsonResponse
+
+from orders.forms import OrderForm
 from . models import FoodCart
 
 from django.http import HttpResponse
@@ -27,9 +30,10 @@ from datetime import datetime
 
 
 def marketplace(request):
+    # Retrieve approved and active restaurants
     restaurants = Restaurant.objects.filter(
         is_approved=True, user__is_active=True)
-    res_count = len(restaurants)
+    res_count = len(restaurants)  # restaurant count
 
     context = {
         'restaurants': restaurants,
@@ -40,9 +44,11 @@ def marketplace(request):
 
 
 def restaurant_detail(request, restaurant_slug):
+    # Retrieve restaurant details based on the provided slug
     restaurant_detail = get_object_or_404(
         Restaurant, restaurant_slug=restaurant_slug)
 
+    # Retrieve categories and related food items for the restaurant
     # fooditems fk in category using related name (reverse lookup)
     categories = Category.objects.filter(
         restaurant=restaurant_detail).prefetch_related(
@@ -52,16 +58,17 @@ def restaurant_detail(request, restaurant_slug):
             )
     )
 
+    # Retrieve opening hours for the restaurant
     opening_hour = OpeningHour.objects.filter(
         restaurant=restaurant_detail).order_by('day', '-from_hour')
 
     # check current day opening hour
     today_date = date.today()
     today = today_date.isoweekday()
-
     current_opening_hour = OpeningHour.objects.filter(
         restaurant=restaurant_detail, day=today)
 
+    # Retrieve cart items for authenticated users
     cart_items = (
         FoodCart.objects.filter(user=request.user)
         if request.user.is_authenticated
@@ -248,3 +255,34 @@ def search(request):
         # return HttpResponse('search page')
 
         return render(request, 'marketplace/listings.html', context)
+
+
+@login_required(login_url='login')
+def checkout(request):
+    cart_items = FoodCart.objects.filter(
+        user=request.user).order_by('created_at')
+    cart_count = cart_items.count()
+
+    if cart_count <= 0:
+        return redirect('marketplace')
+
+    user_profile = UserProfile.objects.get(user=request.user)
+    default_values = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'phone': request.user.phone_number,
+        'email': request.user.email,
+        'address': user_profile.address,
+        'country': user_profile.country,
+        'state': user_profile.state,
+        'city': user_profile.city,
+        'pin_code': user_profile.pin_code,
+
+    }
+    form = OrderForm(initial=default_values)
+    context = {
+        'cart_items': cart_items,
+        'form': form,
+
+    }
+    return render(request, 'marketplace/checkout.html', context)

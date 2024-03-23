@@ -2,15 +2,21 @@ from .models import User, UserProfile
 from django import forms
 from .validators import allow_only_images_validator
 
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
+    # Recaptcha
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox, required=False)
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name',
-                  'username', 'email', 'password']
+                  'username', 'email', 'password',]
 
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
@@ -28,7 +34,8 @@ class UserProfileForm(forms.ModelForm):
         widget=forms.FileInput(attrs={'class': 'btn.btn-info'}), validators=[allow_only_images_validator])
     cover_photo = forms.FileField(
         widget=forms.FileInput(attrs={'class': 'btn.btn-info'}), validators=[allow_only_images_validator])
-
+    latitude = forms.CharField(widget=forms.TextInput())
+    longitude = forms.CharField(widget=forms.TextInput())
     # latitude = forms.CharField(
     #     widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     # longitude = forms.CharField(
@@ -46,3 +53,9 @@ class UserProfileForm(forms.ModelForm):
         for field in self.fields:
             if field == 'latitude' or field == 'longitude':
                 self.fields[field].widget.attrs['readonly'] = 'readonly'
+
+
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'phone_number']
