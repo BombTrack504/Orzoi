@@ -2,122 +2,116 @@
 
 {% load static %}
 {% block content %}
-    <!-- Main Section Start -->
-    <div class="main-section" style="margin-top: 140px;">
-        <div class="page-section">
-            <div class="container">
-                <div class="row">
-                   
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                        <div class="tabs-holder horizontal">
-                            <ul class="stickynav-tabs nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#home"><i class="fa fa-shopping-cart text-danger"></i>Cart items</a></li>
-                                
-                            </ul>
-                            <div class="tab-content">
-                                <div id="home" class="tab-pane in active">
-                                    <div class="menu-itam-holder">
-
-                                        <div class="text-center p-5" id="empty-cart" style="display: none;">
-                                            <h3>Cart is Empty</h3>
-                                        </div>
-                                        
-                                        <div id="menu-item-list-6272" class="menu-itam-list">
-                                            <ul>
-                                                {% if cart_items %}
-                                                    {% for item in cart_items %}
-                                                    <li id="cart-item-{{item.id}}">
-                                                        <div class="image-holder"> <img src="{{ item.fooditem.image.url}}" alt=""></div>
-                                                        <div class="text-holder">
-                                                            <h6>{{ item.fooditem }}</h6>
-                                                            <a href="{% url 'restaurant_detail' item.fooditem.restaurant.restaurant_slug %}"><span>{{ item.fooditem.restaurant}}</span></a>
-                                                        </div>
-                                                        <div class="price-holder">
-                                                            <span class="price">Rs {{ item.fooditem.price }}</span>
-                                                            <a href="#" class="decrease_cart" data-id="{{ item.fooditem.id }}" id="{{ item.id }}" data-url="{% url 'decrease_cart' item.fooditem.id %}" style="margin-right: 27px;"><i class="icon-minus text-color"></i></a>
-                                                            <label id="qty-{{item.fooditem.id}}">0</label>
-                                                            <a href="#" class="add_to_cart" data-id="{{ item.fooditem.id }}" data-url="{% url 'add_to_cart' item.fooditem.id %}"><i class="icon-plus4 text-color"></i></a>
-                                                            <a href="#" class="delete_cart" data-id="{{ item.id }}" data-url="{% url 'delete_cart' item.id %}"><i class="icon-trash text-color"></i></a>
-                                                        </div>
-                                                    </li>
-                                                    {% endfor %}
-                                                {% else %}
-                                                    <div class="text-center p-5">
-                                                        <h3>Cart is Empty</h3>
-                                                    </div>
-                                                {% endif %}
-                                            </ul>
-                                            
-                                        </div>
-
-                                        {% for item in cart_items %}
-                                            <span id="qty-{{item.fooditem.id}}" class="item_qty d-none" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                
-                            </div>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2 style="color: wheat !important;">Food Cart </h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'home'%}">Home</a>
+                            <span>Food Cart</span>
                         </div>
                     </div>
-                    
-
-
-                    <!-- your order section -->
-
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                        <div class="tabs-holder horizontal">
-                            <ul class="stickynav-tabs nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Your order</a></li>
-                                
-                            </ul>
-                            <div class="tab-content">
-                                <div id="home" class="tab-pane in active">
-                                    <div class="menu-itam-holder">
-                                        <div>
-                                            <ul>
-                                                <li style="list-style-type: none;">
-                                                    Subtotal
-                                                    <span class="price float-right">
-                                                        <span class="currency">Rs</span>
-                                                        <span id="subtotal">{{ subtotal }}</span>
-                                                    </span>
-                                                </li>
-
-                                                {% for key, value in tax_dict.items %}
-                                                    {% for i,j in value.items%}
-                                                        <li style="list-style-type: none;">
-                                                            {{ key }} <small>({{ i }}%)</small>
-                                                            <span class="price float-right">
-                                                                <span class="currency">Rs</span>
-                                                                <span id="tax-{{ key }}">{{ j }}</span>
-                                                            </span>
-                                                        </li>
-                                                    {% endfor %}
-                                                {% endfor %}
-
-                                                <li style="list-style-type: none; font-weight:600;">
-                                                    TOTAL
-                                                    <span class="price float-right">
-                                                        <span class="currency">Rs</span>
-                                                        <span id="grandtotal">{{ grandtotal }}</span>
-                                                    </span>
-                                                </li>
-
-                                                <a href="{% url 'checkout'%}" class="btn btn-danger w-100 p-2 mt-3">PROCCED TO CHECKOUT</a>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                        
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-
-
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Main Section End -->
-{% endblock%}
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad" style="background-color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Food's</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th> <!-- Added a column for actions -->
+                                </tr>
+                                <div class="text-center p-5" id="empty-cart" style="display: none;">
+                                    <h3>Cart is Empty</h3>
+                                </div>
+                            </thead>
+                            <tbody id="menu-item-list-6272" >
+                                {% if cart_items %}
+                                    {% for item in cart_items %}
+                                        <tr id="cart-item-{{item.id}}">
+                                            <td class="shoping__cart__item" style="vertical-align: middle;">
+                                                <img src="{{ item.fooditem.image.url}}" alt="" style="max-width: 100px;">
+                                                <h5 style="margin: 10px 0;">{{ item.fooditem }}</h5>
+                                            </td>
+                                            <td class="shoping__cart__price" style="vertical-align: middle;">Rs{{ item.fooditem.price }}</td>
+
+                                            <td class="shoping__cart__quantity" style="vertical-align: middle; text-align: center;">
+                                                <div style="display: flex; align-items: center; justify-content: center;">
+                                                    <a href="#" class="decrease_cart" data-id="{{ item.fooditem.id }}" id="{{ item.id }}" data-url="{% url 'decrease_cart' item.fooditem.id %}" style="font-size: 20px; color: black; text-decoration: none; background-color: #f0f0f0; border-radius: 5px; padding: 8px; margin-right: 5px;"><i class="fa fa-minus"></i></a>
+                                                    <label id="qty-{{ item.fooditem.id }}" style="margin: 0 10px; font-size: 16px; color: black;">0</label>
+                                                    <a href="#" class="add_to_cart" data-id="{{ item.fooditem.id }}" data-url="{% url 'add_to_cart' item.fooditem.id %}" style="font-size: 20px; color: black; text-decoration: none; background-color: #f0f0f0; border-radius: 5px; padding: 8px; margin-left: 5px;"><i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </td>                                            
+                                            <td class="shoping__cart__action" style="vertical-align: middle; text-align: center;">
+                                                <a href="#" class="delete_cart" data-id="{{ item.id }}" data-url="{% url 'delete_cart' item.id %}" style="font-size: 20px; color: red;"><i class="fa fa-trash"></i></a> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="text-center p-5">
+                                        <h3>Cart is Empty</h3>
+                                    </div>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% for item in cart_items %}
+                             <span id="qty-{{item.fooditem.id}}" class="item_qty d-none" data-qty="{{ item.quantity }}">{{ item.quantity }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- Additional items in the cart can be listed here -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li style="list-style-type: none;">
+                                Subtotal
+                                <span class="price float-right">
+                                    <span class="currency">Rs</span>
+                                    <span id="subtotal">{{ subtotal }}</span>
+                                </span>
+                            </li>
+                            {% for key, value in tax_dict.items %}
+                                {% for i,j in value.items%}
+                                    <li style="list-style-type: none;">
+                                        {{ key }} <small>({{ i }}%)</small>
+                                        <span class="currency">Rs</span>
+                                        <span class="price float-right">
+                                            <span id="tax-{{ key }}">{{ j }}</span>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            {% endfor %}
+                            <li style="list-style-type: none; font-weight: 600;">
+                                TOTAL
+                                <span class="price float-right">
+                                    <span class="currency">Rs</span>
+                                    <span id="grandtotal">{{ grandtotal }}</span>
+                                </span>
+                            </li>
+                        </ul>
+                        <a href="{% url 'checkout'%}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Shoping Cart Section End -->
+{% endblock %}

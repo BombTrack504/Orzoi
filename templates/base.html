@@ -3,10 +3,10 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Orzoi</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Orzoi</title>
 	<!-- Google Font Family Link Start -->
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
@@ -14,7 +14,7 @@
 
 	<!-- CSS -->
 	<link href="{% static 'css/iconmoon.css' %}" rel="stylesheet">
-	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<link href="{% static 'css/style.css' %}" rel="stylesheet"> 
 	<link href="{% static 'css/cs-foodbakery-plugin.css' %}" rel="stylesheet">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 	<link href="{% static 'css/bootstrap-slider.css' %}" rel="stylesheet">
@@ -28,14 +28,54 @@
 	<script src="{% static 'js/custom.js' %}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	
-	<!-- {% if '/profile/' in request.path or '/' == request.path %}
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutoComplete" async defer></script>
-	{% endif %} -->
-
-	<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 	{% if '/marketplace/' == request.path or 'profile' in request.path %}
 		<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" defer></script>
 	{% endif %}
+	
+	<!-- {% if '/profile/' in request.path or '/' == request.path %}
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutoComplete" async defer></script>
+	{% endif %} -->
+	
+	<!-- Google Font Family Link -->
+	<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+	<!-- Google Font Family Link End -->
+	
+	<!-- NEW CSS LINKS -->
+	<link href="{% static 'css2/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/font-awesome.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/elegant-icons.css' %}" rel="stylesheet">	
+	<link href="{% static 'css2/nice-select.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/jquery-ui.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/owl.carousel.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/slicknav.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css2/style.css' %}" rel="stylesheet">
+	<!-- NEW CSS LINKS END -->
+
+	<!-- NEW JAVASCRIPT -->
+	<script src="{% static 'js2/jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static 'js2/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js2/jquery.nice-select.min.js' %}"></script>
+	<script src="{% static 'js2/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'js2/jquery.slicknav.js' %}"></script>
+	<script src="{% static 'js2/mixitup.min.js' %}"></script>
+	<script src="{% static 'js2/owl.carousel.min.js' %}"></script>
+	<script src="{% static 'js2/main.js' %}"></script>
+	
+	<!-- NEW JAVASCRIPT END -->
+	
+
+	<!-- Include Databales plugin Script and Css  -->
+	<link rel="stylesheet" href="//cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
+	<script src="//cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#myordersTable').DataTable();
+		});
+	</script>
+	<!-- Include Databales plugin Script and Css End  -->
+
+
+	
 	<style>
 		body, .main-section p, .mce-content-body p{
 			font:Normal  14px/24px "Open Sans", sans-serif;letter-spacing: 0px;text-transform: none;color: #515151 !important;

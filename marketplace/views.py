@@ -5,7 +5,7 @@ from accounts.models import UserProfile
 from menu.models import Category, FoodItem
 
 from django.shortcuts import redirect
-from Restaurant.models import Restaurant, OpeningHour
+from Restaurant.models import Restaurant, OpeningHour, ReviewAndRating
 from django.db.models import Prefetch
 
 from django.http import JsonResponse
@@ -26,6 +26,8 @@ from django.contrib.gis.db.models.functions import Distance
 from datetime import date
 from django.utils import timezone
 from datetime import datetime
+
+
 # Create your views here.
 
 
@@ -75,15 +77,16 @@ def restaurant_detail(request, restaurant_slug):
         else None
     )
 
+    reviews = ReviewAndRating.objects.filter(status=True)
+
     context = {
-        key: value for key, value in [
-            ('restaurant_detail', restaurant_detail),
-            ('categories', categories),
-            ('cart_items', cart_items),
-            ('opening_hour', opening_hour),
-            ('current_opening_hour', current_opening_hour),
-            # Add more key-value pairs here if needed
-        ]
+        'restaurant': restaurant_detail,
+        'categories': categories,
+        'cart_items': cart_items,
+        'opening_hour': opening_hour,
+        'current_opening_hour': current_opening_hour,
+        'restaurant_id': restaurant_detail.id,
+        'reviews': reviews,
     }
     return render(request, 'marketplace/restaurant_detail.html', context)
 

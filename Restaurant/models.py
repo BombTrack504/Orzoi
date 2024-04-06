@@ -5,6 +5,8 @@ from accounts.utils import send_notfication
 from datetime import time
 from datetime import date
 from datetime import datetime
+from django.utils import timezone
+from django.db.models import Avg, Count
 # Create your models here.
 
 
@@ -23,26 +25,54 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.Restaurant_name
 
+    @property
+    def averageReview(self):
+        reviews = ReviewAndRating.objects.filter(
+            restaurant=self, status=True).aggregate(average=Avg('rating'))
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg
+
+    @property
+    def countReview(self):
+        reviews = ReviewAndRating.objects.filter(
+            restaurant=self, status=True).aggregate(count=Count('id'))
+        count = 0
+        if reviews['count'] is not None:
+            count = int(reviews['count'])
+        return count
+
     def is_open(self):
-        # check current day opening hour
-        today_date = date.today()
+        # Get today's date in the correct timezone
+        today_date = timezone.localdate()
+
+        # Get the current day of the week (1 for Monday, 2 for Tuesday, ..., 7 for Sunday)
         today = today_date.isoweekday()
 
-        current_opening_hour = OpeningHour.objects.filter(
+        # Retrieve opening hours for the current day
+        current_opening_hours = OpeningHour.objects.filter(
             restaurant=self, day=today)
-        now = datetime.now()
-        current_time = now.strftime("%I:%M:%S")
+        # Get the current time in the correct timezone
+        current_time = timezone.localtime().time()
 
-        is_open = None
-        for i in current_opening_hour:
-            if not i.is_closed:
-                start = str(datetime.strptime(i.from_hour, "%I:%M %p").time())
-                end = str(datetime.strptime(i.to_hour, "%I:%M %p").time())
+        # Initialize the flag to False
+        is_open = False
 
-                if current_time > start and current_time < end:
+        # Iterate through the opening hours for the current day
+        for opening_hour in current_opening_hours:
+            # Check if the restaurant is open during the current time
+            if not opening_hour.is_closed:
+                start_time = timezone.make_aware(datetime.strptime(
+                    opening_hour.from_hour, "%I:%M %p")).time()
+                end_time = timezone.make_aware(datetime.strptime(
+                    opening_hour.to_hour, "%I:%M %p")).time()
+
+                # Check if the current time is within the opening hours
+                if start_time <= current_time < end_time:
                     is_open = True
-                else:
-                    is_open = False
+                    break  # Exit the loop if the restaurant is open
+
         return is_open
 
     def save(self, *args, **kwargs):
@@ -54,6 +84,7 @@ class Restaurant(models.Model):
                 context = {
                     'user': self.user,
                     'is_approved': self.is_approved,
+                    'to_email': self.user.email
                 }
                 if self.is_approved == True:
                     # send notification email
@@ -67,13 +98,13 @@ class Restaurant(models.Model):
 
 
 DAYS = [
-    (1, ("Sunday")),
-    (2, ("Monday")),
-    (3, ("Tuesday")),
-    (4, ("Wednesday")),
-    (5, ("Thursday")),
-    (6, ("Friday")),
-    (7, ("Saturday")),
+    (1, ("Monday")),
+    (2, ("Tuesday")),
+    (3, ("Wednesday")),
+    (4, ("Thursday")),
+    (5, ("Friday")),
+    (6, ("Saturday")),
+    (7, ("Sunday")),
 ]
 
 HOURS = [(time(h, m).strftime('%I:%M %p'), time(h, m).strftime('%I:%M %p'))
@@ -83,8 +114,8 @@ HOURS = [(time(h, m).strftime('%I:%M %p'), time(h, m).strftime('%I:%M %p'))
 class OpeningHour(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     day = models.IntegerField(choices=DAYS)
-    from_hour = models.CharField(choices=HOURS, max_length=10, blank=True)
-    to_hour = models.CharField(choices=HOURS, max_length=10, blank=True)
+    from_hour = models.CharField(choices=HOURS, max_length=20, blank=True)
+    to_hour = models.CharField(choices=HOURS, max_length=20, blank=True)
     is_closed = models.BooleanField(default=False)
 
     class Meta:
@@ -94,3 +125,19 @@ class OpeningHour(models.Model):
     def __str__(self):
         # return self.day
         return self.get_day_display()
+
+
+class ReviewAndRating(models.Model):
+    restaurant = models.ForeignKey(
+        Restaurant, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100, blank=True)
+    review = models.TextField(max_length=500, blank=True)
+    rating = models.FloatField()
+    ip = models.CharField(max_length=20, blank=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def str(self):
+        return self.subject

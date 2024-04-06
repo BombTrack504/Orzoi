@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
 from django.db.models.fields.related import ForeignKey, OneToOneField
 
 from django.contrib.gis.db import models as gismodels
@@ -83,6 +84,9 @@ class User(AbstractBaseUser):
 
     # Use UserManager for managing user objects
     objects = UserManager()
+
+    def full_name(self):
+        return f'{self.first_name}{self.last_name}'
 
     def __str__(self):
         return self.email  # Return the user's email as the string representation

@@ -23,4 +23,7 @@ urlpatterns = [
     # ORDERS
     path('orders/', include('orders.urls')),
 
+    path('submit_review/<int:restaurant_id>/',
+         views.submit_review, name='submit_review')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

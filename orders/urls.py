@@ -5,4 +5,6 @@ urlpatterns = [
     path('place_order/', views.place_order, name='place_order'),
     path('verify-khalti-payment/', views.verify_khalti_payment,
          name='verify_khalti_payment'),
+
+    path('order_complete/', views.order_complete, name='order_complete'),
 ]

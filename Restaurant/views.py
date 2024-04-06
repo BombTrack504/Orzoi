@@ -1,6 +1,8 @@
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 
+from orders.models import Order, OrderedFood
+
 from .models import Restaurant, OpeningHour
 
 from Restaurant.forms import RestaurantForm, OpeningHourForm
@@ -18,6 +20,9 @@ from menu.models import FoodItem, Category
 from menu.forms import CategoryForm, FoodItemForm
 
 from django.template.defaultfilters import slugify
+
+from django.utils import timezone
+from datetime import datetime
 
 
 def get_restaurant(request):
@@ -260,6 +265,7 @@ def delete_food(request, pk=None):
 
 
 def opening_hour(request):
+    # Retrieve OpeningHour objects for the current restaurant
     opening_hour = OpeningHour.objects.filter(
         restaurant=get_restaurant(request))
     form = OpeningHourForm()
@@ -308,3 +314,32 @@ def remove_opening_hour(request, pk=None):
             hour = get_object_or_404(OpeningHour, pk=pk)
             hour.delete()
             return JsonResponse({'status': 'success', 'id': pk})
+
+
+def ord_detail(request, order_number):
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        # print(order)
+        ordered_food = OrderedFood.objects.filter(
+            order=order, fooditem__restaurant=get_restaurant(request))
+        # print(ordered_food)
+        context = {
+            'order': order,
+            'ordered_food': ordered_food,
+            'subtotal': order.get_total_by_res()['subtotal'],
+            'tax_data': order.get_total_by_res()['tax_dict'],
+            'grand_total': order.get_total_by_res()['grand_total'],
+        }
+    except:
+        return redirect('restaurant')
+    return render(request, 'restaurant/ord_detail.html', context)
+
+
+def restaurant_ord(request):
+    restaurant = Restaurant.objects.get(user=request.user)
+    orders = Order.objects.filter(
+        restaurants__in=[restaurant.id], is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'Restaurant/restaurant_ord.html', context)

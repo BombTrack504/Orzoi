@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static%}
+{% block content %}
+		<!-- Main Section Start -->
+        
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2 style="color: wheat !important;">Contact us </h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'home'%}">Home</a>
+                            <span>Contact us</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                    <div class="contact__widget">
+                        <span class="icon_phone"></span>
+                        <h4>Phone</h4>
+                        <p>+977-9815119702</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                    <div class="contact__widget">
+                        <span class="icon_pin_alt"></span>
+                        <h4>Address</h4>
+                        <p>New Road, Pokhara 3370 Gandaki Province</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                    <div class="contact__widget">
+                        <span class="icon_mail_alt"></span>
+                        <h4>Email</h4>
+                        <p>orzoi@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Section End -->
+
+    <!-- Map Begin -->
+    <div class="map">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3515.6899225153625!2d83.98674752850752!3d28.216731948294974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3995944d76693d11%3A0xf1f006d89be13640!2sNew%20Rd%2C%20Pokhara%2033700!5e0!3m2!1sen!2snp!4v1711554807633!5m2!1sen!2snp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-inside">
+            <i class="icon_pin"></i>
+            <div class="inside-widget">
+                <h4>New road</h4>
+                <ul>
+                    <li>Phone: +977-9815119701</li>
+                    <li>Add: Newroad. Pokhara, NP</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Map End -->
+
+ 
+
+    
+{% endblock content %}

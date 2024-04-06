@@ -4,7 +4,7 @@
 {% block content %}
     <!-- Main Section Start -->
 			<div class="main-section">
-				<div class="page-section restaurant-detail-image-section" style=" background: url({% if restaurant_detail.user_profile.cover_photo %} {{ restaurant_detail.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %}) no-repeat scroll 0 0 / cover;">
+				<div class="page-section restaurant-detail-image-section" style=" background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %}) no-repeat scroll 0 0 / cover;">
 					<!-- Container Start -->
 					<div class="container">
 						<!-- Row Start -->
@@ -15,15 +15,15 @@
 									<div class="company-info">
 										<div class="img-holder">
 											<figure>
-                                                    {% if restaurant_detail.user_profile.cover_photo %}
-												        <img src="{{ restaurant_detail.user_profile.profile_picture.url }}" alt="">
+                                                    {% if restaurant.user_profile.profile_picture%}
+												        <img src="{{ restaurant.user_profile.profile_picture.url }}" alt="">
                                                     {% else %}
                                                         <img src="{% static 'images/default-profile.png' %}" alt="">
                                                     {% endif %}
 											</figure>
 										</div>
 										<div class="text-holder">
-											<span class="restaurant-title">{{ restaurant_detail.Restaurant_name }} {% if not restaurant_detail.is_open %}[CLOSED]{% endif %}</span>
+											<span class="restaurant-title">{{ restaurant.Restaurant_name }} {% if not restaurant.is_open %}[CLOSED]{% endif %}</span>
 											<div class="text">
 												{% if restaurant.user_profile.address %}
 												<i class="icon-location"></i>
@@ -80,8 +80,8 @@
 							<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
 								<div class="tabs-holder horizontal">
 									<ul class="stickynav-tabs nav nav-tabs">
-										<li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Menu</a></li>
-										
+										<li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Menu</a>
+										</li>
 									</ul>
 									<div class="tab-content">
 										<div id="home" class="tab-pane in active">
@@ -121,9 +121,69 @@
 										</div>
 										
 									</div>
+									
+
 								</div>
+								<form action="{% url 'submit_review' restaurant.id %}" method="POST">
+									{% csrf_token %}
+									<h5>Write your reviews</h5>
+									<div>
+									 <label>How do you rate this restaurant?</label> 
+									 <br>
+									 <div class="rate">
+										<input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+										<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+										<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+										<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+										<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+										<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+										<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+										<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+										<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+										<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+									</div>
+									 <br>
+									 <br>
+									 Review Title:
+									 <input type="text" class="form-control" name="subject">
+									 <br>
+									 Review:
+									 <textarea name="review" rows="4" class="form-control"></textarea>
+									 <br>
+									 {% if user.is_authenticated %}
+									 	<input type="submit" value="Submit Review" class ="btn btn-primary">
+									 {% else %}
+									 	<p>You must be logged in to post a review.<span><a href="{% url 'login' %}">Login now</a></span></p>
+									 {% endif %}
+									</div>
+									{% include 'includes/alerts.html' %}
+								</form>
+								 <br>
+								 <header class="section heading">
+									<h3>Customer Reviews</h3>
+									<p>Average Review: {{ restaurant.averageReview }}/5</p><p>{{restaurant.countReview}} reviews</p>
+								</header>
+								{% for review in reviews %}
+									{% if review.restaurant_id == restaurant.id %}
+										<article class="box mb-3">
+											<div class="icontext w-100">
+												<div class="text">
+													<span class="date text-muted float-md-right">{{review.updated_at}} </span>
+													<h6 class="mb-1">{{review.user.full_name}} </h6>
+													<p>{{ review.rating }}/ 5</p>
+													{% if request.user == review.user %}
+														<a href="{% url 'delete_review' review.id %}" class="btn btn-danger btn-sm">Delete</a>
+													{% endif %}
+												</div>
+											</div> 
+											<div class="mt-3">
+												<h6>{{review.subject}}</h6>
+												<p>{{review.review}}</p>
+											</div>
+										</article>
+									{% endif %}
+								{% endfor %}
 							</div>
-							
 						</div>
 					</div>
 				</div>

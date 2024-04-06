@@ -1,159 +1,172 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
-		<!-- Main Section Start -->
-<div class="main-section">
-    <div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 60px;margin-bottom: 0px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                    <div class="user-dashboard loader-holder" style="margin-top:90px;">
-                        <div class="user-holder">
-                    <h4 class="text-center" style="margin-bottom: 0;">WELCOME TO Orzoi</h4>
-                    <p class="text-center">Please fill this form to get yourself onboarded in the foodOnline marketplace.</p>
-                    <hr>
-                    <div id="restaurant-sets-holder">
-                        <form action="{% url 'registerUser' %}" class="form-fields-set foodbakery-dev-restaurant-form" method="post" enctype="multipart/form-data" onsubmit="return validatePassword()">
-                            {% csrf_token %}
-                            <ul class="register-add-restaurant-tab-container restaurant-information-tab-container">
-                                <li>
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="row">
-                                                <ul >
-                                                    <li>
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>First name</label>{{form.first_name}}
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>Last name</label>{{form.last_name}}
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>Email Address</label>{{form.email}}
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>Username</label>{{form.username}}
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    
-                                                    <li>
-                                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>Password</label>
-                                                                <input type="password" id="password" name="password" placeholder="Enter Password" class="form-control">
-                                                                    <div class="input-group-append">
-                                                                        <button class="btn btn-outline-secondary" type="button" id="tp1" style="margin-top: 10px;margin-right:4px;">Show</button>
-                                                                    </div>
-                                                                <!-- {{form.password}} -->
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                                            <div class="field-holder">
-                                                                <label>Confirm Password</label>
-                                                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Enter confirm Password" class="form-control">
-                                                                    <div class="input-group-append">
-                                                                        <button class="btn btn-outline-secondary" type="button" id="tp2" style="margin-top: 10px;margin-right:4px;">Show</button>
-                                                                    </div>
-                                                                <!-- {{form.confirm_password}} -->
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <ul class ="errorlist">
-                                        {% for field in form %}
-                                            {% if field.errors %}
-                                                {% for error in field.errors %}
-                                                <li style="color:red;">{{error}}</li>
-                                                {% endfor %}
-                                            {% endif %}
-                                        {% endfor %}
-                                        <li style="color: red;">{{form.non_field_errors}}</li>
-                                    </ul>
-                                    {{ form.captcha }}
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <div class="field-holder">
-                                                <div class="payment-holder">
-                                                    <input type="submit" value="REGISTER" id="btn-next-restaurant-information" class="bgcolor">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <!--load message-->  
-                                            {% include 'includes/alerts.html' %}
-                                        </div>
-                                    </div>
-
-                                </li>
-                            </ul>
-                        </form>
-                    </div>
-                </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2 style="color: wheat !important;">CREATE YOUR ACCOUNT</h2>
+                    <div class="breadcrumb__option">
+                        <a href="{% url 'home'%}">Home</a>
+                        <span>Register User</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Main Section End -->
+</section>
+<!-- Breadcrumb Section End -->
 
-<script>
-    function validatePassword() {
-        var password = document.getElementById("password").value;
-        // Regular expressions to check for at least one alphabet, one number, and one special character
-        var alphabetRegex = /[a-zA-Z]/;
-        var numberRegex = /[0-9]/;
-        var specialCharRegex = /[^a-zA-Z0-9]/;
-        // Check if the password meets the conditions
-        if (password.length < 6 || !alphabetRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
-            alert("Password must be at least 6 characters long and contain at least one alphabet, one number, and one special character.");
-            return false; // Prevent form submission
-        }
-        return true; // Allow form submission
-    }
-</script>
+<section class="checkout spad" style="background-color: white;">
+    <div class="container">
+        <div class="checkout__form">
+            <h4>Register Here</h4>
+            <form action="{% url 'registerUser' %}" method="post" enctype="multipart/form-data" onsubmit="return validatePassword()"> 
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    {{form.first_name | safe}}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    {{form.last_name | safe}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    {{form.email | safe}}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Username<span>*</span></p>
+                                    {{form.username | safe}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Password<span>*</span></p>
+                                    <div style="position: relative;">
+                                        {{ form.password }}
+                                        <span onclick="togglePassword('id_password', 'eyeIcon')" id="eyeIcon" class="fa fa-eye" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Confirm Password<span>*</span></p>
+                                    <div style="position: relative;">
+                                        {{ form.confirm_password }}
+                                        <span onclick="togglePassword('id_confirm_password', 'confirmEyeIcon')" id="confirmEyeIcon" class="fa fa-eye" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {{ form.captcha }}
+                            </div>
+                            <div class="col-lg-6">
+                                <button type="submit" style="margin-top: 95px;" class="site-btn text-center">Register</button>
+                            </div>
+                        </div>
+                        <ul class ="errorlist">
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                    <li style="color:red;">{{error}}</li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            <li style="color: red;">{{form.non_field_errors}}</li>
+                        </ul>
 
-<script>
-    // Toggle password visibility
-  document.getElementById("tp1").addEventListener("click", function() {
-    var passwordInput = document.getElementById("password");
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      this.textContent = "Hide";
-    } else {
-      passwordInput.type = "password";
-      this.textContent = "Show";
-    }
-    });
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <!--load message-->  
+                                {% include 'includes/alerts.html' %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <style>
+                    .checkout__input input[type="text"] {
+                        border: 1px solid #ccc;
+                        padding: 8px;
+                        width: 100%;
+                        color: black;
+                    }
+                </style>
+            </div>
+        </section>
+        
+        <script>
+            function togglePassword(passwordFieldId, eyeIconId) {
+                var passwordField = document.getElementById(passwordFieldId);
+                var eyeIcon = document.getElementById(eyeIconId);
+                
+                // Check if passwordField is null
+                if (!passwordField) {
+                    console.error("Password field not found with ID:", passwordFieldId);
+                    return;
+                }
+                
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                } else {
+                    passwordField.type = "password";
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                }
+            }
+        </script>
+        
+        <!-- Add the script for password validation -->
+        <script>
+            function validatePassword() {
+                var password = document.getElementById("id_password").value;
+                var confirm_password = document.getElementById("id_confirm_password").value;
+                // Regular expressions to check for at least one alphabet, one number, and one special character
+                var alphabetRegex = /[a-zA-Z]/;
+                var numberRegex = /[0-9]/;
+                var specialCharRegex = /[^a-zA-Z0-9]/;
+                // Check if the password meets the conditions
+                if (password.length < 6 || !alphabetRegex.test(password) || !numberRegex.test(password) || !specialCharRegex.test(password)) {
+                    alert("Password must be at least 6 characters long and contain at least one alphabet, one number, and one special character.");
+                    return false; // Prevent form submission
+                }
+                // Check if password and confirm password match
+                if (password !== confirm_password) {
+                    alert("Password and confirm password do not match.");
+                    return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+            }
+        </script>
 
-    // Toggle repeat password visibility
-    document.getElementById("tp2").addEventListener("click", function() {
-    var confirmPasswordInput = document.getElementById("confirm_password");
-    if (confirmPasswordInput.type === "password") {
-        confirmPasswordInput.type = "text";
-        this.textContent = "Hide";
-    } else {
-        confirmPasswordInput.type = "password";
-        this.textContent = "Show";
-    }
-    });
-</script>
+
+        <style>
+            .show-password {
+                -webkit-text-security: none;
+            }
+        </style>
+<!-- Checkout Section End -->
+
+
 {% endblock content %}

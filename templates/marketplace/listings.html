@@ -2,177 +2,182 @@
 
 {% load static %}
 {% block content %}
-
-<!-- Main Section Start -->
-<div class="main-section">
-    <div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 80px;padding-bottom: 60px;margin-bottom: 0px;background: url(assets/extra-images/banner-img-2.jpg) no-repeat center top / cover;">
-        <!-- Container Start -->
-        <div class="container ">
-            <div class="row">
-                <div class="section-fullwidth col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                            <!--Element Section Start-->
-                            <!--Foodbakery Element Start-->
-                            <div class="row">
-                                <!-- Column Start -->
-                                <div class="listing-main-search">
-                                    <div class="main-search" style="margin-top: 85px;">
-                                        <form action="{% url 'search' %}" method="GET">
-                                            <div class="restaurant-search-element-container row">
-                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                                    <div class="field-holder"> <span class="restaurant-element-search-btn"><i class="icon-search5"></i> </span>
-                                                        <input placeholder="Resturant name or Food name" name="keyword" value="" type="text">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                                    <div class="field-holder"> <span> <i class="icon-location search-by-location-icon"></i>
-                                                        </span>
-                                                        <ul>
-                                                            <li class="select-location">
-                                                                <div class="foodbakery-locations-fields-group foodbakery-focus-out">
-                                                                    <input type="text" name="address" class="location-field-text filter" id="id_address" required placeholder="All Locations">
-                                                                    <input type="hidden" name="lat" value="" id="id_latitude">
-                                                                    <input type="hidden" name="lng" value="" id="id_longitude">
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                                                    <select name="radius" id="radius">
-                                                        <option value="" selected>Choose radius</option>
-                                                        <option value="2">2km</option>
-                                                        <option value="5">5km</option>
-                                                        <option value="10">10km</option>
-                                                        <option value="15">15km</option>
-                                                        <option value="20">20km</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                                                    <div class="field-holder">
-                                                        <input type="submit" value="search">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                <!-- Column End -->
-                            </div>
-                            <!--Foodbakery Element End-->
-                        </div>
-                    </div><!-- end section row -->
-                </div>
-            </div>
-        </div> <!-- End Container Start -->
-    </div>
-    <div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 10px;margin-bottom: 0px;">
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                            <div class="listing-sorting-holder">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <h4>{{ res_count }} Restaurant's found</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="listing simple">
-                                <ul>
-                                    {% for restaurant in restaurants %}
-                                    <li>
-                                        <div class="img-holder">
-                                            <figure>
-                                                <a href="#">
-                                                    {% if restaurant.user_profile.profile_picture %}
-                                                        <img src="{{ restaurant.user_profile.profile_picture.url }}" class="img-list wp-post-image" alt="">
-                                                    {% else %}
-                                                        <img src="{% static 'images/default-profile.png' %}" class="img-list wp-post-image" alt="">
-                                                    {% endif %}
-                                                    </a>
-                                            </figure>
-                                            {% if restaurant.is_open%}
-                                                <span class="restaurant-status open"><em class="bookmarkRibbon"></em>Open</span>
-                                            {% else %}
-                                                <span class="restaurant-status close"><em class="bookmarkRibbon"></em>Close</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="text-holder">
-                                            <div class="list-rating">
-                                                <div class="rating-star">
-                                                    <span class="rating-box" style="width: 100%;"></span>
-                                                </div>
-                                                <span class="reviews">(1)</span>
-                                            </div>
-                                            <div class="post-title">
-                                                <h5>
-                                                    <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}">{{ restaurant }}</a>
-                                                    
-                                                </h5>
-                                            </div>
-                                            
-                                            <div class="delivery-potions">
-                                                <div class="post-time">
-                                                    <i class="icon-motorcycle"></i>
-                                                    <div class="time-tooltip">
-                                                        <div class="time-tooltip-holder"> <b class="tooltip-label">Delivery
-                                                                time</b> <b class="tooltip-info">Your order will
-                                                                be
-                                                                delivered in 10 minutes.</b> </div>
-                                                    </div>
-                                                </div>
-                                                <div class="post-time">
-                                                    <i class="icon-clock4"></i>
-                                                    <div class="time-tooltip">
-                                                        <div class="time-tooltip-holder"> <b class="tooltip-label">Pickup
-                                                                time</b> <b class="tooltip-info">You
-                                                                can pickup order in
-                                                                15 minutes.</b> </div>
-                                                    </div>
-                                                </div>
-                                                {% if restaurant.user_profile.address %}
-                                                    <span>{{ restaurant.user_profile.address }}</span>
-                                                {% endif %}
-
-                                                {% if source_location %}
-                                                    <br>
-                                                    <span><small><b>{{restaurant.kms}}</b>km away from you.</small></span>
-                                                    <!-- <span><small><b>{{restaurant.kms}}</b>km away from {{source_location}}.</small></span> -->
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="list-option">
-
-                                            <!-- <a href="javascript:void(0);" class="shortlist-btn" data-toggle="modal" data-target="#sign-in"><i class="icon-heart4"></i> </a> -->
-                                            <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" class="viewmenu-btn text-color">View Menu</a>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
-
-                                </ul>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="page-nation">
-                                        <ul class="pagination pagination-large">
-                                            <li class="disabled"><span>Prev</span></li>
-                                            <li class="active"><span><a class="page-numbers active">1</a></span></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">Next</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2 style="color: wheat !important;">Find Restaurants </h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'home'%}">Home</a>
+                            <span>Marketplace</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Main Section End -->
+    </section>
+    <!-- Breadcrumb Section End -->
 
+    <section class="ftco-section" style="position: relative; align-items: center; background-color: white; ">
+		<div class="container" style="margin-top: 60px; margin-bottom: -60px;">
+			<div class="row justify-content-center">
+				<div class="col-md-12">
+					<form action="{% url 'search' %}"  method="GET">
+                        <div class="row">
+                            <div class="col-md mb-md-0 mb-1">
+                                <div class="form-group">
+                                    <div class="form-field">
+                                        <input name="keyword" value="" type="text" class="form-control" placeholder="Restaurant Name or Food Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md mb-md-0 mb-1">
+                                <div class="form-group">
+                                    <div class="form-field">
+                                        <div class="select-location">
+                                            <input type="text" name="address" id="id_address" class="location-field-text filter" placeholder="Current Location">
+                                            <input type="hidden" name="lat" value="" id="id_latitude">
+											<input type="hidden" name="lng" value="" id="id_longitude">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md mb-md-0 mb-1">
+                                <div class="form-group">
+                                    <div class="form-field">
+                                        <div class="select-wrap">
+                                            <select  name="radius" id="radius" class="form-control">
+                                                <option value="" selected>Choose radius</option>
+                                                <option value="5">5 KM</option>
+                                                <option value="10">10 KM</option>
+                                                <option value="15">15 KM</option>
+                                                <option value="20">20 KM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md d-flex align-items-end mb-md-0 mb-0" style="margin-left: -10px;">
+                                <div class="form-group">
+                                    <input type="submit" class="primary-btn px-4 align-self-stretch d-block" value="Search" style="height: 40px; padding: 0%;;">
+                                </div>
+                            </div>
+                        </div>
+	        	    </form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+    <section class="product spad" style="background-color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="filter__item">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-5">
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div class="filter__found">
+                                    <h6><span>{{ res_count }}</span> Restaurants found</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% for restaurant in restaurants %}
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="card" style="position: relative; background: #fff; max-width: 400px; margin: 20px auto; box-shadow: 0px 0px 5px 1px #000;">
+                                        <div style="background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %} ) no-repeat center; background-size: cover; min-height: 200px; ">
+                                            {% if restaurant.is_open%}
+                                                <div class="icon open" style="position: absolute; right: 10px; top: 10px; background: green; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px green;">
+                                                    <i class="fa fa-check-circle"></i> 
+                                                </div>
+                                            {% else %}
+                                                <div class="icon closed" style="position: absolute; right: 10px; top: 10px; background: red; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px red;">
+                                                    <i class="fa fa-times-circle"></i> 
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                   
+                                    <div class="text" style="text-align: center; margin: 20px 30px;">
+                                        <h1 class="food" style="color: #212129 !important; font-weight: normal !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; font-size: 14px !important; margin-top: 0px !important;"><a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a></h1>
+                                        {% if restaurant.user_profile.address %}
+                                            <i class="fa fa-map-marker" style="color: black;"> {{ restaurant.user_profile.address }}</i>
+                                        {% endif %}
+                                        {% if source_location %}
+                                            <br>
+                                            <span><small><b>{{restaurant.kms}}</b> KM away from you.</small></span>
+                                        {% endif %}
+
+                                        <p>Average Review: {% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}/5{% else %}0/5{% endif %}</p>
+		                                <p>{% if restaurant.countReview %}{{ restaurant.countReview }} reviews{% else %}0 reviews{% endif %}</p>
+                                        
+                                    </div>
+                                    {% if restaurant.is_open%}
+                                        <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" class="btn" style="display: block; background: green; color: #fff; position: relative; text-transform: uppercase; letter-spacing: 0.1em; text-align: center; padding: 10px; transition: 250ms;">View Menu</a>
+                                    {% else %}
+                                        <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" class="btn" style="display: block; background: #EF3E36; color: #fff; position: relative; text-transform: uppercase; letter-spacing: 0.1em; text-align: center; padding: 10px; transition: 250ms;">View Menu <span style="text-transform: lowercase;">(Currently Closed)</span></a>
+                                    {% endif %}
+                                </div>
+                            </div>   
+                        {% endfor %}
+                    </div>
+                    <div class="product__pagination">
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+    <script>
+        var x = document.getElementById("location");
+        var current_location =  sessionStorage.getItem("current_location")
+        if (current_location != ""){
+            x.value = current_location;
+        }
+        
+        function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+        }
+        
+        function showPosition(position) {
+            var lat = position.coords.latitude
+            var lng = position.coords.longitude
+    
+            x.value = lat +', '+lng
+            //console.log(position);
+            //x.innerHTML = "Latitude: " + position.coords.latitude +
+            //"<br>Longitude: " + position.coords.longitude;
+    
+            //hit ajax request to googlemaps api endpoint and get the location data using those lat and lng
+                    
+            var GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
+            var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"+&key="+GOOGLE_API_KEY
+            console.log(url);
+            $.ajax ({
+                url: url,
+                type: "GET",
+                success: function(response) {
+                    //console.log(response);
+                   //console.log(current_location);
+                   var current_location = response.results[0].formatted_address
+                    x.value = current_location
+                    sessionStorage.setItem("current_location", current_location)
+                    window.location = '?lat='+lat+'&lng='+lng
+                }
+            })
+            
+        }
+        </script>
 {% endblock %}

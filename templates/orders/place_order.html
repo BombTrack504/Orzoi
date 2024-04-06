@@ -2,113 +2,127 @@
 
 {% load static %}
 {% block content %}
-    <!-- Main Section Start -->
-    <div class="main-section" style="margin-top: 140px;">
-        <div class="page-section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                        <div class="tabs-holder horizontal">
-                            <ul class="stickynav-tabs nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#home"><i class="fa fa-shopping-cart text-danger"></i>Review Your Billing Address</a></li> 
-                            </ul>
-                            <div class="tab-content">
-                                <div id="home" class="tab-pane in active">
-                                    <div class="menu-itam-holder">
-                                        <div id="menu-item-list-6272" class="menu-itam-list">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- your order section -->
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                        <div class="tabs-holder horizontal">
-                            <ul class="stickynav-tabs nav nav-tabs">
-                                <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Your order</a></li>  
-                            </ul>
-                            <div class="tab-content">
-                                <div id="home" class="tab-pane in active">
-                                    <div class="menu-itam-holder">
-                                        <div>
-                                            <ul>
-                                                <li style="list-style-type: none;">
-                                                    Subtotal
-                                                    <span class="price float-right">
-                                                        <span class="currency">Rs</span>
-                                                        <span id="subtotal">{{ subtotal }}</span>
-                                                    </span>
-                                                </li>
 
-                                                {% for key, value in tax_dict.items %}
-                                                    {% for i,j in value.items%}
-                                                        <li style="list-style-type: none;">
-                                                            {{ key }} <small>({{ i }}%)</small>
-                                                            <span class="price float-right">
-                                                                <span class="currency">Rs</span>
-                                                                <span id="tax-{{ key }}">{{ j }}</span>
-                                                            </span>
-                                                        </li>
-                                                    {% endfor %}
-                                                {% endfor %}
+<!-- Include the Khalti JavaScript SDK -->
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+<!-- Include the Khalti JavaScript SDK end -->
 
-                                                <li style="list-style-type: none; font-weight:600;">
-                                                    TOTAL
-                                                    <span class="price float-right">
-                                                        <span class="currency">Rs</span>
-                                                        <span id="grandtotal">{{ grandtotal }}</span>
-                                                    </span>
-                                                    
-                                                </li>
-                                                {% if Purcheses.payment_method == 'Khalti'%}
-                                                    <button id="payment-button" class="btn btn-success w-100"><strong>Pay with Khalti</strong></button>
-                                                {% endif %}
-                                                <!-- <a href="{% url 'checkout'%}" class="btn btn-danger w-100 p-2 mt-3">PROCCED TO CHECKOUT</a> -->
-                                                
-                                            </ul>
-                                        </div>
-                                    </div>      
-                                </div>
-                            </div>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2 style="color: wheat !important;">Review Your Billing Address </h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'home'%}">Home</a>
+                            <span>Place Order</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="checkout__form">
+                <h4>Review Your Billing Address</h4>
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="checkout__details">
+                            <div class="checkout__detail">
+                                <p><strong>Name : </strong>{{ ord.name }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>Address : </strong>{{ ord.address }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>Phone : </strong>{{ ord.phone }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>Email : </strong>{{ ord.email  }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>City : </strong>{{ ord.city }} - {{ ord.pin_code }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>State/Country : </strong>{{ ord.state }}, {{ ord.country }}</p>
+                            </div>
+                            <div class="checkout__detail">
+                                <p><strong>Payment Method : </strong>{{ ord.payment_method}}</p>
+                            </div>
+                        </div>
+                        <button id="editDetailsBtn" class="site-btn edit">Edit</button>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <div class="checkout__order__subtotal">Subtotal <span>Rs {{ subtotal }}</span></div>
+
+                            <div class="checkout__order__subtotal">
+                                {% for key, value in tax_dict.items %}
+                                    {% for i,j in value.items%}
+                                        <li style="list-style-type: none;">
+                                            {{ key }} <small>({{ i }}%)</small>
+                                            <span class="price float-right">
+                                                <span id="tax-{{ key }}">Rs {{ j }}</span>
+                                            </span>
+                                        </li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                            <div class="checkout__order__total">Total <span>Rs {{ grandtotal }}</span></div>
+                            {% if ord.payment_method == 'Khalti'%}
+                                <button id="payment-button" class="site-btn pay-btn khalti">Pay with Khalti</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            .site-btn.edit {
+                background-color: red;
+            }
+        
+            .site-btn.pay-btn.khalti {
+                background-color: #56328c;
+            }
+        </style>
+    </section>
+
+<!-- Khalti Integration -->
 
 <script>
     // Function to fetch the CSRF token from cookies
-    function getCookie(name){
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== ''){
-        const cookies = document.cookie.split(';');
-        for(let i = 0; i < cookies.length;i++){
-            const cookie = cookies[i].trim();
-            if(cookie.substring(0,name.length + 1)===(name + '=')){
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
         }
         return cookieValue;
     }
 
-    var total = "{{ total }}"
-    var url = "{% url 'payment' %}"
-    var order_number = "{{ purchases.order_number}}"
-    var buyer_name = "{{purchases.first_name}} {{purchases.last_name}}"
+    var total = "{{ grandtotal }}"
+    var order_number = "{{ ord.order_number}}"
+    var buyer_name = "{{ord.first_name}} {{ord.last_name}}"
     const csrftoken = getCookie('csrftoken');
-    var purchase_completion = "{% url 'purchase_completion' %}"
-
-    console.log('csrftoken===>',csrftoken)
-    // Render the PayPal button into #paypal-button-container
+    console.log('csrftoken===>', csrftoken);
 
     var config = {
         // replace the publicKey with yours
-        "publicKey": "test_public_key_5a8766283a2f4eeca54b7434c427c536",
+        "publicKey": "test_public_key_c43d5cef7b1f49ea8183cd4e93595b7b",
         "productIdentity": order_number,
         "productName": buyer_name,
         "productUrl": "http://127.0.0.1:8000/",
@@ -126,7 +140,7 @@
                 const khalti_amount = payload.amount;
                 const khalti_token = payload.token;
                 $.ajax({
-                        url: '/items/verify-khalti-payment/',
+                        url: '/orders/verify-khalti-payment/',
                         type: 'POST',
                         headers: {
                             'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if using Django CSRF protection
@@ -161,9 +175,15 @@
     var checkout = new KhaltiCheckout(config);
     var btn = document.getElementById("payment-button");
     btn.onclick = function () {
+
         console.log("khalti clicked")
         // minimum transaction amount must be 10, i.e 1000 in paisa.
         checkout.show({amount: total * 100});
     }
 </script>
+
+
+<!-- Khalti Integration END -->
+
+
 {% endblock%}

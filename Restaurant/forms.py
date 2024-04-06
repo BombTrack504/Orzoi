@@ -1,5 +1,5 @@
 from django import forms
-from . models import Restaurant, OpeningHour
+from . models import Restaurant, OpeningHour, ReviewAndRating
 from accounts.validators import allow_only_images_validator
 
 
@@ -19,3 +19,9 @@ class OpeningHourForm(forms.ModelForm):
     class Meta:
         model = OpeningHour
         fields = ['day', 'from_hour', 'to_hour', 'is_closed']
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = ReviewAndRating
+        fields = ['subject', 'review', 'rating']

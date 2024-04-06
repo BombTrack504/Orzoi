@@ -59,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Custom middleware created to access the request object in models.py
+    'orders.request_object.RequestObjectMiddleware',
 ]
 
 ROOT_URLCONF = 'Orzoi.urls'
@@ -98,6 +100,9 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'options': '-c timezone=UTC',  # Set the database timezone to UTC
+        },
     }
 }
 
@@ -171,7 +176,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'ORZOI <gaurabshrestha15901590@gamil.com>'
 
 
-GOOGLE_API_KEY = ''
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
 
 
 # Gdal
@@ -183,5 +188,8 @@ GDAL_LIBRARY_PATH = os.path.join(
     BASE_DIR, 'env\Lib\site-packages\osgeo\gdal304.dll')
 
 
-RECAPTCHA_PUBLIC_KEY = ''
-RECAPTCHA_PRIVATE_KEY = ''
+RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY')
+
+TIME_ZONE = 'Asia/Kathmandu'
+USE_TZ = True

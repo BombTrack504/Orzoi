@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Restaurant.models import Restaurant, OpeningHour
+from Restaurant.models import Restaurant, OpeningHour, ReviewAndRating
 
 # Register your models here.
 
@@ -16,3 +16,4 @@ class OpeningHourAdmin(admin.ModelAdmin):
 
 admin.site.register(Restaurant, RestaurantAdmin)
 admin.site.register(OpeningHour, OpeningHourAdmin)
+admin.site.register(ReviewAndRating)

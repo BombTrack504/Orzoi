@@ -21,5 +21,8 @@ urlpatterns = [
 
     path('Restaurant/', include('Restaurant.urls')),
     path('customer/', include('customers.urls')),
+    path('contact/', views.contact, name='contact'),
 
+    path('delete_review/<int:review_id>/',
+         views.delete_review, name='delete_review'),
 ]

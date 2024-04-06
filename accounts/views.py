@@ -1,10 +1,12 @@
 from django.utils.http import urlsafe_base64_decode
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from django.conf import settings
 
 
 from Restaurant.forms import RestaurantForm
+from Restaurant.models import Restaurant, ReviewAndRating
+from orders.models import Order
 from .utils import detectUser, send_verification_email
 from . forms import UserForm
 from .models import User, UserProfile
@@ -292,13 +294,37 @@ def myAccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_Customer)  # 403 Forbidden
 def Customerdashboard(request):
-    return render(request, 'accounts/Customerdashboard.html')
+    orders = Order.objects.filter(user=request.user, is_ordered=True)
+    recent = orders[:5]
+    context = {
+        'orders': orders,
+        'orders_count': orders.count(),
+        'recent': recent,
+    }
+    return render(request, 'accounts/Customerdashboard.html', context)
 
 
 @login_required(login_url='login')
 @user_passes_test(check_role_Restaurant)  # 403 Forbidden
 def Restaurantdashboard(request):
-    return render(request, 'accounts/Restaurantdashboard.html')
+    restaurant = Restaurant.objects.get(user=request.user)
+    orders = Order.objects.filter(
+        restaurants__in=[restaurant.id], is_ordered=True).order_by('-created_at')
+    recent = orders[:10]
+
+    # total revenue
+    total_rev = 0
+    for i in orders:
+        total_rev += i.get_total_by_res()['grand_total']
+
+    context = {
+        'orders': orders,
+        'orders_count': orders.count(),
+        'recent': recent,
+        'total_rev': total_rev,
+    }
+
+    return render(request, 'accounts/Restaurantdashboard.html', context)
 
 
 def forgot_password(request):
@@ -361,3 +387,14 @@ def reset_password(request):
             messages.error(request, 'passowrd do not match!')
             return redirect('reset_password')
     return render(request, 'accounts/reset_password.html')
+
+
+def contact(request):
+    return render(request, 'contact.html')
+
+
+def delete_review(request, review_id):
+    review = get_object_or_404(ReviewAndRating, id=review_id)
+    if request.user == review.user:  # Ensure only the review author can delete it
+        review.delete()
+    return redirect('restaurant_detail', restaurant_slug=review.restaurant.restaurant_slug)
