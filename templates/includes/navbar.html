@@ -178,7 +178,9 @@
 		function showPosition(position) {
 			var lat = position.coords.latitude
 			var lng = position.coords.longitude
-	
+            document.getElementById("id_latitude").value = lat 
+            document.getElementById("id_longitude").value = lng
+
 			x.value = lat +', '+lng
 			//console.log(position);
 			//x.innerHTML = "Latitude: " + position.coords.latitude +
@@ -201,7 +203,6 @@
 					window.location = '?lat='+lat+'&lng='+lng
 				}
 			})
-			
 		}
 		</script>
 	
