@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
     <!-- Main Section Start -->
-			<div class="main-section">
+			<div class="main-section" style="background-color: white !important;">
 				<div class="page-section restaurant-detail-image-section" style=" background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %}) no-repeat scroll 0 0 / cover;">
 					<!-- Container Start -->
 					<div class="container">
@@ -67,7 +67,7 @@
 						<div class="row">
 							<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
 								<div class="filter-wrapper">
-									<div class="categories-menu">
+									<div class="categories-menu" style="background-color: white !important;">
 										<h6><i class="icon-restaurant_menu"></i>Categories</h6>
 										<ul class="menu-list">
 											{% for category in categories %}
@@ -79,20 +79,19 @@
 							</div>
 							<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
 								<div class="tabs-holder horizontal">
-									<ul class="stickynav-tabs nav nav-tabs">
-										<li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Menu</a>
-										</li>
-									</ul>
+
 									<div class="tab-content">
 										<div id="home" class="tab-pane in active">
 											<div class="menu-itam-holder">
-												
 												<div id="menu-item-list-6272" class="menu-itam-list">
-													
+												<h5><b>{{ restaurant.Restaurant_name }}</b> Menu</h5>
 												{% for category in categories %}	
 													<div class="element-title" id="menu-category-2">
+														<br>
+														<br>
 														<h5 class="text-color">{{ category }}</h5>
 														<span>{{ category.description }}</span>
+														<br>
 													</div>
 													<ul>
 														{% for food in category.fooditems.all %}
@@ -100,13 +99,48 @@
 															<div class="image-holder"> <img src="{{ food.image.url}}" alt=""></div>
 															<div class="text-holder">
 																<h6>{{ food }}</h6>
-																<span>{{ food.description }}</span>
+																<span class="description">{{ food.description }}</span>
+																<style>
+																	.text-holder {
+																		max-width: 400px;
+																		white-space: nowrap;
+																		position: relative;
+																	}
+																	
+																	.description {
+																		/* Apply styles specific to the description span */
+																		/* Add any additional styling you want */
+																		display: inline-block; /* Make the description span inline-block */
+																		overflow: hidden;
+																		text-overflow: ellipsis;
+																		white-space: nowrap;
+																	}
+																	
+																	.description:hover {
+																		white-space: normal;
+																		overflow: visible;
+																		text-overflow: clip;
+																		z-index: 999; /* Ensure the description is displayed on top of other content */
+																		position: absolute;
+																		background-color: white;
+																		border: 1px solid #ccc;
+																		padding: 5px;
+																	}
+																</style>
 															</div>
+															<span class="price" style="margin-left: 50px;">Rs {{ food.price }}</span>
 															<div class="price-holder">
-																<span class="price">Rs {{ food.price }}</span>
-																<a href="#" class="decrease_cart" data-id="{{ food.id }}" data-url="{% url 'decrease_cart' food.id %}" style="margin-right: 27px;"><i class="icon-minus text-color"></i></a>
-																<label id="qty-{{food.id}}">0</label>
-																<a href="#" class="add_to_cart" data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}"><i class="icon-plus4 text-color"></i></a>
+																<td class="shoping__cart__quantity" style="vertical-align: middle; text-align: center;">
+																	<div style="display: flex; align-items: center; justify-content: center;">
+																		<a href="#" class="decrease_cart" data-id="{{ food.id }}" data-url="{% url 'decrease_cart' food.id %}" style="font-size: 20px; color: black; text-decoration: none; background-color: #f0f0f0; border-radius: 5px; padding: 7px; margin-right: 5px; display: flex; align-items: flex-end; justify-content: space-between; width: 36px; height: 36px; flex-direction: column; flex-wrap: nowrap;">
+																			<i class="fa fa-minus"></i>
+																		</a>
+																		<label id="qty-{{food.id}}" style="margin: 0 10px; font-size: 16px; color: black;">0</label>
+																		<a href="#" class="add_to_cart" data-id="{{ food.id }}" data-url="{% url 'add_to_cart' food.id %}" style="font-size: 20px; color: black; text-decoration: none; background-color: #f0f0f0; border-radius: 5px; padding: 8px; margin-left: 5px; display: flex; align-items: flex-end; justify-content: space-between; width: 36px; height: 36px; flex-direction: column; flex-wrap: nowrap;">
+																			<i class="fa fa-plus"></i>
+																		</a>
+																	</div>
+																</td>	
 															</div>
 														</li>
 														{% endfor %}
@@ -119,10 +153,7 @@
 												{% endfor %}
 											</div>
 										</div>
-										
 									</div>
-									
-
 								</div>
 								<form action="{% url 'submit_review' restaurant.id %}" method="POST">
 									{% csrf_token %}

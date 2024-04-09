@@ -1,0 +1,22 @@
+asgiref==3.7.2
+certifi==2024.2.2
+charset-normalizer==3.3.2
+Django==5.0.2
+django-jazzmin==2.6.1
+django-ranged-response==0.2.0
+django-recaptcha==4.0.0
+GDAL @ file:///C:/Orzoi/GDAL-3.4.3-cp311-cp311-win_amd64.whl#sha256=f78861fb5115d5c2f8cf3c52a492ff548da9e1256dc84088947379f90e77e5b6
+idna==3.6
+numpy==1.26.4
+pillow==10.2.0
+psycopg2==2.9.9
+pyarrow==15.0.0
+pylance==0.10.1
+python-decouple==3.8
+pytz==2024.1
+requests==2.31.0
+simplejson==3.19.2
+six==1.16.0
+sqlparse==0.4.4
+tzdata==2024.1
+urllib3==2.2.1

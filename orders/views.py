@@ -109,7 +109,8 @@ def place_order(request):
 
 @login_required(login_url='login')
 def verify_khalti_payment(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+    # check if the request is ajax or not
+    if request.headers.get('X-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
         # Retrieve data from the frontend
         data = json.loads(request.body)
         order_number = data.get('order_number')
@@ -152,18 +153,17 @@ def verify_khalti_payment(request):
             ord.save()
 
             # move the cart items to ordered food model
-        cart_items = FoodCart.objects.filter(user=request.user)
-        print("Number of items in cart:", cart_items.count())
-        for item in cart_items:
-            purchased_item = OrderedFood()
-            purchased_item.order = ord
-            purchased_item.payment = payment
-            purchased_item.user = request.user
-            purchased_item.fooditem = item.fooditem
-            purchased_item.quantity = item.quantity
-            purchased_item.price = item.fooditem.price
-            purchased_item.amount = item.fooditem.price * item.quantity
-            purchased_item.save()
+            cart_items = FoodCart.objects.filter(user=request.user)
+            for item in cart_items:
+                o_food = OrderedFood()
+                o_food.order = ord
+                o_food.payment = payment
+                o_food.user = request.user
+                o_food.fooditem = item.fooditem
+                o_food.quantity = item.quantity
+                o_food.price = item.fooditem.price
+                o_food.amount = item.fooditem.price * item.quantity
+                o_food.save()
 
             # send order confirmation email to the customer
             mail_subject = 'thankyou'
@@ -228,7 +228,7 @@ def order_complete(request):
         }
         return render(request, 'orders/order_complete.html', context)
     except:
-        return redirect(request, 'orders/order_complete.html')
+        return redirect('home')
 
 
 # @login_required(login_url='login')

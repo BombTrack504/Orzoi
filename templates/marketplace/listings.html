@@ -38,6 +38,7 @@
                                     <div class="form-field">
                                         <div class="select-location">
                                             <input type="text" name="address" class="location-field-text filter" id="id_address" placeholder="Current Location">
+                                            
                                             <input type="hidden" name="lat" value="" id="id_latitude">
 											<input type="hidden" name="lng" value="" id="id_longitude">
                                         </div>
@@ -137,7 +138,7 @@
     </section>
     <!-- Product Section End -->
     <script>
-        const x = document.getElementById("location");
+        var x = document.getElementById("location");
         var current_location =  sessionStorage.getItem("current_location")
         if (current_location != ""){
             x.value = current_location;
@@ -158,7 +159,7 @@
             document.getElementById("id_longitude").value = lng 
     
             x.value = lat +', '+lng
-            //console.log(position);
+            console.log(position);
             //x.innerHTML = "Latitude: " + position.coords.latitude +
             //"<br>Longitude: " + position.coords.longitude;
     
@@ -179,7 +180,7 @@
                     window.location = '?lat='+lat+'&lng='+lng
                 }
             })
-    
+
         }
-        </script>
+    </script>
 {% endblock %}
