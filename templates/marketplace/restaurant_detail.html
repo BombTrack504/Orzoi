@@ -85,6 +85,7 @@
 											<div class="menu-itam-holder">
 												<div id="menu-item-list-6272" class="menu-itam-list">
 												<h5><b>{{ restaurant.Restaurant_name }}</b> Menu</h5>
+												<button id="openReviewPopupBtn" class="btn btn-primary">Write a Review</button>
 												{% for category in categories %}	
 													<div class="element-title" id="menu-category-2">
 														<br>
@@ -155,69 +156,170 @@
 										</div>
 									</div>
 								</div>
-								<form action="{% url 'submit_review' restaurant.id %}" method="POST">
-									{% csrf_token %}
-									<h5>Write your reviews</h5>
-									<div>
-									 <label>How do you rate this restaurant?</label> 
-									 <br>
-									 <div class="rate">
-										<input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
-										<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
-										<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
-										<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
-										<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
-										<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
-										<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
-										<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
-										<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
-										<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
-									</div>
-									 <br>
-									 <br>
-									 Review Title:
-									 <input type="text" class="form-control" name="subject">
-									 <br>
-									 Review:
-									 <textarea name="review" rows="4" class="form-control"></textarea>
-									 <br>
-									 {% if user.is_authenticated %}
-									 	<input type="submit" value="Submit Review" class ="btn btn-primary">
-									 {% else %}
-									 	<p>You must be logged in to post a review.<span><a href="{% url 'login' %}">Login now</a></span></p>
-									 {% endif %}
-									</div>
-									{% include 'includes/alerts.html' %}
-								</form>
-								 <br>
-								 <header class="section heading">
-									<h3>Customer Reviews</h3>
-									<p>Average Review: {{ restaurant.averageReview }}/5</p><p>{{restaurant.countReview}} reviews</p>
-								</header>
-								{% for review in reviews %}
-									{% if review.restaurant_id == restaurant.id %}
-										<article class="box mb-3">
-											<div class="icontext w-100">
-												<div class="text">
-													<span class="date text-muted float-md-right">{{review.updated_at}} </span>
-													<h6 class="mb-1">{{review.user.full_name}} </h6>
-													<p>{{ review.rating }}/ 5</p>
-													{% if request.user == review.user %}
-														<a href="{% url 'delete_review' review.id %}" class="btn btn-danger btn-sm">Delete</a>
-													{% endif %}
-												</div>
-											</div> 
-											<div class="mt-3">
-												<h6>{{review.subject}}</h6>
-												<p>{{review.review}}</p>
+								<!-- Popup container -->
+								<div id="reviewPopup" class="modal" style="display: none;">
+									<div class="modal-content">
+										<!-- Close button for the popup -->
+										<span class="close">&times;</span>
+
+										<!-- Content of the popup -->
+										<form action="{% url 'submit_review' restaurant.id %}" method="POST">
+											{% csrf_token %}
+											<h5>Write your reviews</h5>
+											<div>
+												<label>How do you rate this restaurant?</label> 
+											<br>
+											<div class="rate">
+												<input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+												<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+												<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+												<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+												<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+												<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+												<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+												<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+												<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+												<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+
 											</div>
-										</article>
-									{% endif %}
-								{% endfor %}
+											<br>
+												Review Title:
+												<input type="text" class="form-control" name="subject">
+												<br>
+												Review:
+												<textarea name="review" rows="4" class="form-control"></textarea>
+												<br>
+												<!-- Submit button -->
+												{% if user.is_authenticated %}
+													<input type="submit" value="Submit Review" class="btn btn-primary">
+												{% else %}
+													<p>You must be logged in to post a review. <a href="{% url 'login' %}">Login now</a></p>
+												{% endif %}
+											</div>
+											{% include 'includes/alerts.html' %}
+										</form>
+										<br>
+										<header class="section heading">
+											<h3>Customer Reviews</h3>
+											<p>Average Review: {{ restaurant.averageReview }}/5</p><p>{{restaurant.countReview}} reviews</p>
+										</header>
+										{% for review in reviews %}
+											{% if review.restaurant_id == restaurant.id %}
+												<article class="box mb-3">
+													<div class="icontext w-100">
+														<div class="text">
+															<span class="date text-muted float-md-right">{{review.updated_at}} </span>
+															<h6 class="mb-1">{{review.user.full_name}} </h6>
+															<p>{{ review.rating }}/ 5</p>
+															{% if request.user == review.user %}
+																<a href="{% url 'delete_review' review.id %}" class="btn btn-danger btn-sm">Delete</a>
+															{% endif %}
+														</div>
+													</div> 
+													<div class="mt-3">
+														<h6>{{review.subject}}</h6>
+														<p>{{review.review}}</p>
+													</div>
+												</article>
+											{% endif %}
+										{% endfor %}
+									</div>
+								</div>
+
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!-- Main Section End -->
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					var popup = document.getElementById('reviewPopup');
+					var openBtn = document.getElementById('openReviewPopupBtn');
+					var closeBtn = document.getElementsByClassName('close')[0];
+					var submitBtn = document.getElementById('submitReviewBtn');
+					var deleteBtns = document.querySelectorAll('.delete-review-btn');
+				
+					openBtn.onclick = function() {
+						popup.style.display = 'block';
+					}
+				
+					closeBtn.onclick = function() {
+						popup.style.display = 'none';
+					}
+				
+					window.addEventListener('click', function(event) {
+						if (event.target !== popup && event.target !== openBtn && !popup.contains(event.target)) {
+							popup.style.display = 'none';
+						}
+					});
+				
+					submitBtn.onclick = function(event) {
+						event.preventDefault();
+					};
+		
+					deleteBtns.forEach(function(btn) {
+						btn.onclick = function(event) {
+							event.preventDefault();
+						};
+					});
+				});
+				</script>
+				
+				<style>
+					.modal {
+						display: none; 
+						position: fixed; 
+						z-index: 1000; 
+						left: 50%; 
+						top: 50%; 
+						transform: translate(-50%, -50%); 
+						width: 100%; 
+						max-width: 780px; 
+						background-color: #fefefe; 
+						border-radius: 8px; 
+						box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+						padding: 15px; 
+						max-height: 90vh; 
+						overflow-y: auto; 
+					}
+					
+					.close {
+						position: absolute;
+						top: 10px;
+						right: 10px;
+						font-size: 20px;
+						color: #aaa;
+					}
+					
+					.close:hover,
+					.close:focus {
+						color: #000;
+						text-decoration: none;
+						cursor: pointer;
+					}
+					
+					.modal-content {
+						width: 100%;
+						text-align: center;
+						border: 0px solid rgba(0,0,0,.2);
+					}
+					
+					.modal-content form {
+						margin-top: 20px;
+					}
+					
+					/* Style for the header */
+					.modal-content .heading {
+						margin-top: 20px;
+						margin-bottom: 10px;
+					}
+					
+					/* Style for the reviews section */
+					.modal-content .box {
+						margin-bottom: 20px;
+					}
+
+
+					</style>
 {% endblock %}

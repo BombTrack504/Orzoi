@@ -26,7 +26,7 @@ from django.contrib.gis.db.models.functions import Distance
 from datetime import date
 from django.utils import timezone
 from datetime import datetime
-
+from math import floor
 
 # Create your views here.
 
@@ -35,12 +35,25 @@ def marketplace(request):
     # Retrieve approved and active restaurants
     restaurants = Restaurant.objects.filter(
         is_approved=True, user__is_active=True)
+
+    # Calculate stars for each restaurant
+    for restaurant in restaurants:
+        average_rating = restaurant.averageReview
+        if average_rating:
+            full_stars = int(floor(average_rating))
+            half_star = 1 if average_rating - full_stars >= 0.5 else 0
+            empty_stars = 5 - full_stars - half_star
+            stars = ['full' for _ in range(
+                full_stars)] + ['half' for _ in range(half_star)] + ['empty' for _ in range(empty_stars)]
+            restaurant.stars = stars
+        else:
+            restaurant.stars = []
+
     res_count = len(restaurants)  # restaurant count
 
     context = {
         'restaurants': restaurants,
         'res_count': res_count,
-
     }
     return render(request, 'marketplace/listings.html', context)
 

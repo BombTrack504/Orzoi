@@ -4,7 +4,7 @@
 {% block content %}
 
 <!-- Hero Section Begin -->
-<section class="hero">
+<section class="hero" style="background-color: white !important;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -39,10 +39,11 @@
 <section class="categories">
 	<div class="container">
 		<div class="section-title" style="text-align: center;">
+			<br>
 			<h2>How It Works?</h2>
 	</div>
 </section>
-<section class="section features" aria-label="Features">
+<section class="section features" aria-label="Features" style="background-color: white !important;">
 	<div class="container">
 		<ul class="grid-list">
 			<li class="feature-item">
@@ -79,7 +80,7 @@
 	<style>
 		.section {
 			text-align: center;
-			padding: 50px 0;
+			padding: 40px 0;
 		}
 		
 		.container {
@@ -129,18 +130,18 @@
 <!-- Categories Section End -->
 
 <!-- Featured Section Begin -->
-<section class="featured spad">
+<section class="featured spad" style="background-color: white !important;">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12">
-				<div class="section-title">
+			<div class="col-lg-12" >
+				<div class="section-title" >
 					<h2>Restaurants Near You</h2>
 					<br>
 					<h5>Enter your location above.</h5>
 				</div>
 			</div>
 		</div>
-		<div class="row featured__filter">
+		<div class="row featured__filter" >
 			{% for restaurant in restaurants %}
 				<div class="col-lg-4 col-md-4 col-sm-6">
 					<div class="blog__item">
@@ -155,7 +156,7 @@
 								</a>
 								<figcaption>
 									<a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}">
-									<div class="circular-frame">
+									<div class="circular-frame" style="margin-top: -2px;">
 										{% if restaurant.user_profile.profile_picture %}
 											<img class="round-image" src="{{ restaurant.user_profile.profile_picture.url }}" alt="Profile Picture">
 										{% else %}
@@ -165,19 +166,20 @@
 									</a>
 								</figcaption>
 							</div>
+							<br>
 							<div class="blog__item__text">
 								<ul>
 									{% if restaurant.user_profile.city and restaurant.user_profile.state  %}
 										<li class="location" style="color: black;"><i class="fa fa-map-marker"></i> {{ restaurant.user_profile.city }}, {{ restaurant.user_profile.state}}</li>
 									{% endif %}
+									<h5><a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a></h5>
 									{% if restaurant.kms%}
 										<br>
-										<span><small><b>{{restaurant.kms}}</b>km away from you.</small></span>
+										<span><small><b>{{restaurant.kms}}</b> km away from you.</small></span>
 									{% endif %}
 								</ul>
-								<h5><a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a></h5>
-								<p>Average Review: {% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}/5{% else %}0/5{% endif %}</p>
-								<p>{% if restaurant.countReview %}{{ restaurant.countReview }} reviews{% else %}0 reviews{% endif %}</p>
+								<p style="margin-bottom: 8px;">Average Review <span style="color: green;"><b>{% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}</b></span> Out of 5{% else %}0 Out of 5{% endif %}</p>
+								<p style="margin-bottom: 8px;">{% if restaurant.countReview %}{{ restaurant.countReview }} reviews{% else %}0 reviews{% endif %}</p>
 								{% if restaurant.is_open%}
 									<button class="btn btn-success">OPEN</button>
 								{% else %}
@@ -268,7 +270,7 @@
 
 
 <!-- Blog Section Begin -->
-<section class="from-blog spad">
+<section class="from-blog spad" style="background-color: white !important;">
 	
 </section>
 <!-- Blog Section End -->

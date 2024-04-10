@@ -286,37 +286,49 @@ ul.social li{
                 <tr>
                     <td style="text-align: left; padding: 1rem 5rem; line-height: 0.5;">
             			<div>
-                            <h5>Order Number:   {{ ord.order_number }}</h5>
-                            <h5>Payment Method:  {{ ord.payment_method }}</h5>
-                            <h5>Transaction ID:  {{ ord.payment.transaction_id }}</h5>
-                            <h5>Order Date:  {{ ord.created_at }}</h5>
+                            <h5><b>Order Number:  </b> {{ ord.order_number }}</h5>
+                            <h5><b>Payment Method:  </b>{{ ord.payment_method }}</h5>
+                            <h5><b>Transaction ID: </b> {{ ord.payment.transaction_id }}</h5>
+                            <h5><b>Order Date: </b> {{ ord.created_at }}</h5>
             			</div>
             		</td>  
                 </tr>
             </table>
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-            	<tbody>
-                    <tr>
-                        <th>Food Items</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                    </tr>
-                    <tr>
-                        {% for food in ordered_food %}
-                        <tr>
-                            <!-- <td><img src="http://{{ domain }} {{ food.fooditem.image.url }}" alt="Food Image" width="60"></td> -->
-                            <td><p style="margin: 0;">{{ food.fooditem }}</p>
-                                <small><a href="http://{{domain}}{% url 'restaurant_detail' food.fooditem.restaurant.restaurant_slug %}" style="color: grey;" >{{ food.fooditem.restaurant.restaurant_name }}</a></small>
-                            </td>
-                            <td>{{ food.quantity }}</td>
-                            <td>{{ food.price }}</td>
+				<tbody>
+					<tr>
+						<th style="text-align: center;">Food Items</th>
+						<th style="text-align: center;">Qty</th>
+						<th style="text-align: center;">Price</th>
+					</tr>
+					<br>
+					{% for food in ordered_food %}
+						<tr>
+							<td style="text-align: center;">{{ food.fooditem }}</td>
+							<td style="text-align: center;">{{ food.quantity }}</td>
+							<td style="text-align: center;">Rs {{ food.price }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tbody>
+					<td style="text-align: left; padding: 1rem 5rem; line-height: 0.5;">
+						<div>
+							<h4><b>Subtotal: Rs {{ customer_subtotal }}</b></h4>
 
+							{% for key, val in tax_data.items %}
+								{% for a, b in val.items %}
+									<h4><b>{{ key }} <small>({{ a }}%)</small> : <span>Rs </span><span>{{ b }}</span></b></h4>
+											
+								{% endfor %}
+							{% endfor %}
 
-                        </tr>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
+							<h4><b>Grand Total: Rs {{ ord.total }}</b></h4>
+						</div>
+					</td>
+				</tbody>
+			</table>
           </td>
 	      </tr>
       </table>

@@ -10,7 +10,7 @@ from .forms import OrderForm
 from .models import Order, OrderedFood, Payment
 import simplejson as json
 from django.contrib.auth.decorators import login_required
-from .utils import create_ord_num
+from .utils import create_ord_num, order_total_by_res
 
 from accounts.utils import send_notfication
 
@@ -169,12 +169,20 @@ def verify_khalti_payment(request):
             mail_subject = 'thankyou'
             mail_template = 'orders/order_confirmation.html'
             ordered_food = OrderedFood.objects.filter(order=ord)
+            customer_subtotal = 0
+            for item in ordered_food:
+                customer_subtotal += (item.price * item.quantity)
+
+            tax_data = json.loads(ord.tax_data)
             context = {
                 'user': request.user,
                 'ord': ord,
                 'to_email': ord.email,
                 'ordered_food': ordered_food,
                 'domain': get_current_site(request),
+                'customer_subtotal': customer_subtotal,
+                'tax_data': tax_data,
+
             }
             send_notfication(mail_subject, mail_template, context)
 
@@ -185,12 +193,20 @@ def verify_khalti_payment(request):
             for i in cart_items:
                 if i.fooditem.restaurant.user.email not in to_emails:
                     to_emails.append(i.fooditem.restaurant.user.email)
-            print('to_emails ==>', to_emails)
-            context = {
-                'ord': ord,
-                'to_email':  to_emails,
-            }
-            send_notfication(mail_subject, mail_template, context)
+                    ordered_food_to_restaurant = OrderedFood.objects.filter(
+                        order=ord, fooditem__restaurant=i.fooditem.restaurant)
+                    # print(ordered_food_to_restaurant)
+
+                    context = {
+                        'ord': ord,
+                        'to_email':  i.fooditem.restaurant.user.email,
+                        'ordered_food_to_restaurant': ordered_food_to_restaurant,
+                        'restaurant_subtotal': order_total_by_res(ord, i.fooditem.restaurant.id)['subtotal'],
+                        'tax_data': order_total_by_res(ord, i.fooditem.restaurant.id)['tax_dict'],
+                        'restaurant_grand_total': order_total_by_res(ord, i.fooditem.restaurant.id)['grand_total'],
+                    }
+            # print('to_emails ==>', to_emails)
+                    send_notfication(mail_subject, mail_template, context)
 
             FoodCart.objects.filter(user=request.user).delete()
 

@@ -31,16 +31,16 @@ function onPlaceChanged() {
         // console.log('results=>', results)
         // console.log('status=>', status)
 
-        if(status == google.maps.GeocoderStatus.OK){
-            var latitude = results[0].geometry.location.lat();
-            var longitude = results[0].geometry.location.lng();
+    if(status == google.maps.GeocoderStatus.OK){
+        var latitude = results[0].geometry.location.lat();
+        var longitude = results[0].geometry.location.lng();
 
-            // console.log('lat=>', latitude);
-            // console.log('lng=>', longitude);
-            $('#id_latitude').val(latitude);
-            $('#id_longitude').val(longitude);
-            $('#id_address').val(address);
-        }
+        console.log('lat=>', latitude);
+        console.log('lng=>', longitude);
+        $('#id_latitude').val(latitude);
+        $('#id_longitude').val(longitude);
+        $('#id_address').val(address);
+    }
     });
 
     //loop through the address components and assign other address data
@@ -68,7 +68,6 @@ function onPlaceChanged() {
             }
         }
     }
-
 }
 
 

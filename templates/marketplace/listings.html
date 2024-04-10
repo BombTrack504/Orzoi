@@ -18,29 +18,31 @@
             </div>
         </div>
     </section>
+    <br>
     <!-- Breadcrumb Section End -->
 
-    <section class="ftco-section" style="position: relative; align-items: center; background-color: white; ">
-		<div class="container" style="margin-top: 60px; margin-bottom: -60px;">
-			<div class="row justify-content-center">
+    <section class="ftco-section" style="position: relative; align-items: center; background-color: white !important;">
+		<div class="container" style="margin-bottom: -60px; display: flex; align-items: center; justify-content: flex-start; flex-direction:column; ">
+			<h5 style="margin-top: 20px; margin-bottom: 20px;">Search your Favourite Restaurants and Favourite Food</h5>
+            <div class="row justify-content-center">
 				<div class="col-md-12">
 					<form action="{% url 'search' %}" method="GET">
                         <div class="row">
                             <div class="col-md mb-md-0 mb-1">
                                 <div class="form-group">
-                                    <div class="form-field">
-                                        <input name="keyword" value="" type="text" class="form-control" placeholder="Restaurant Name or Food Name">
+                                    <div class="form-field" style="width: 250px;" >
+                                        <input name="keyword" value="" type="text" class="form-control" placeholder="Restaurant & Food Name">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md mb-md-0 mb-1">
                                 <div class="form-group">
                                     <div class="form-field">
-                                        <div class="select-location">
+                                        <div class="select-location" style="width: 250px;">
                                             <input type="text" name="address" class="location-field-text filter" id="id_address" placeholder="Current Location">
                                             
                                             <input type="hidden" name="lat" value="" id="id_latitude">
-											<input type="hidden" name="lng" value="" id="id_longitude">
+                                            <input type="hidden" name="lng" value="" id="id_longitude">
                                         </div>
                                     </div>
                                 </div>
@@ -50,8 +52,7 @@
                                     <div class="form-field">
                                         <div class="select-wrap">
                                             <select  name="radius" id="radius" class="form-control">
-                                                <option value="" selected>Choose radius</option>
-                                                <option value="5">5 KM</option>
+                                                <option value="5" selected>5 KM</option>
                                                 <option value="10">10 KM</option>
                                                 <option value="15">15 KM</option>
                                                 <option value="20">20 KM</option>
@@ -90,21 +91,23 @@
                     <div class="row">
                         {% for restaurant in restaurants %}
                             <div class="col-lg-4 col-md-4 col-sm-6">
-                                <div class="card" style="position: relative; background: #fff; max-width: 400px; margin: 20px auto; box-shadow: 0px 0px 5px 1px #000;">
-                                        <div style="background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %} ) no-repeat center; background-size: cover; min-height: 200px; ">
-                                            {% if restaurant.is_open%}
-                                                <div class="icon open" style="position: absolute; right: 10px; top: 10px; background: green; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px green;">
-                                                    <i class="fa fa-check-circle"></i> 
-                                                </div>
-                                            {% else %}
-                                                <div class="icon closed" style="position: absolute; right: 10px; top: 10px; background: red; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px red;">
-                                                    <i class="fa fa-times-circle"></i> 
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                   
+                                <div class="card bordered-content" style="position: relative; background: #fff; max-width: 400px; margin: 20px auto; box-shadow: 0px 0px 1px 0px #000; border-radius: 10px; transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;">
+                                    <div style="background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %} ) no-repeat center; background-size: cover; min-height: 200px; border-radius: 10px;">
+                                        {% if restaurant.is_open%}
+                                            <div class="icon open" style="position: absolute; right: 10px; top: 10px; background: green; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px green;">
+                                                <i class="fa fa-check-circle"></i> 
+                                            </div>
+                                        {% else %}
+                                            <div class="icon closed" style="position: absolute; right: 10px; top: 10px; background: red; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px red;">
+                                                <i class="fa fa-times-circle"></i> 
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                               
                                     <div class="text" style="text-align: center; margin: 20px 30px;">
-                                        <h1 class="food" style="color: #212129 !important; font-weight: normal !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; font-size: 14px !important; margin-top: 0px !important;"><a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a></h1>
+                                        <h1 class="food" style="color: #212129 !important; font-weight: normal !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; font-size: 14px !important; margin-top: 0px !important;">
+                                            <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a>
+                                        </h1>
                                         {% if restaurant.user_profile.address %}
                                             <i class="fa fa-map-marker" style="color: black;"> {{ restaurant.user_profile.address }}</i>
                                         {% endif %}
@@ -112,11 +115,45 @@
                                             <br>
                                             <span><small><b>{{restaurant.kms}}</b> KM away from you.</small></span>
                                         {% endif %}
+                                        <p style="margin-bottom: 8px;">Average Review <span style="color: green;"><b>{% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}</b></span> Out of 5{% else %}0 Out of 5{% endif %}</p>
+                                        <p>
+                                            {% if restaurant.stars %}
+                                                {% for star in restaurant.stars %}
+                                                    {% if star == 'full' %}
+                                                        <i class="fa fa-star star filled"></i>
+                                                    {% elif star == 'half' %}
+                                                        <i class="fa fa-star-half-o star filled"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-star star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                No reviews yet
+                                            {% endif %}
+                                        </p>
+                                        <style>
+                                            .star {
+                                                color: #8e8e9a; 
+                                                font-size: 20px; 
+                                                transition: color 0.2s; 
+                                                cursor: pointer;
+                                            }
 
-                                        <p>Average Review: {% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}/5{% else %}0/5{% endif %}</p>
-		                                <p>{% if restaurant.countReview %}{{ restaurant.countReview }} reviews{% else %}0 reviews{% endif %}</p>
-                                        
+                                            .star.filled {
+                                                color: #ffc107; 
+                                            }
+
+                                            .rating-container:hover .star {
+                                                color: #ffc107; 
+                                            }
+
+                                            .rating-container.active .star {
+                                                color: #ffc107; 
+                                            }
+                                        </style>
+                                        <p>{% if restaurant.countReview %}{{ restaurant.countReview }} reviews{% else %}0 reviews{% endif %}</p>
                                     </div>
+                                    
                                     {% if restaurant.is_open%}
                                         <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" class="btn" style="display: block; background: green; color: #fff; position: relative; text-transform: uppercase; letter-spacing: 0.1em; text-align: center; padding: 10px; transition: 250ms;">View Menu</a>
                                     {% else %}
@@ -126,6 +163,15 @@
                             </div>   
                         {% endfor %}
                     </div>
+                    
+                    <style>
+                        .bordered-content:hover {
+                            border-color: #ccc;
+                            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+                            transform: scale(1.05);
+                        }
+                    </style>
+                    
                     <div class="product__pagination">
                         <a href="#">1</a>
                         <a href="#">2</a>
