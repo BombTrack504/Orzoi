@@ -41,6 +41,7 @@ def check_role_Customer(user):  # check customer
 
 
 def registerUser(request):
+    recaptcha_site_key = settings.RECAPTCHA_PUBLIC_KEY
 
     # check if user is authemticated or not
     if request.user.is_authenticated:
@@ -51,23 +52,7 @@ def registerUser(request):
     elif request.method == 'POST':
         form = UserForm(request.POST)
 
-        # Initializes a ReCaptchaField instance with a widget (ReCaptchaV2Checkbox)
-        captcha = request.POST.get('g-recaptcha-response')
-        captcha_field = ReCaptchaField(
-            widget=ReCaptchaV2Checkbox, required=False)
-
-        # check recaptcha
-        try:
-            captcha_is_valid = captcha_field.clean(captcha)
-        except forms.ValidationError:
-            captcha_is_valid = False
-
-        if form.is_valid() and captcha_is_valid:
-            # password = form.cleaned_data['password']
-            # user = form.save(commit=False)
-            # user.role = User.CUSTOMER
-            # User.save()
-
+        if form.is_valid():
             # Extracting clean data from form field
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
@@ -90,17 +75,14 @@ def registerUser(request):
                 request, 'Your account has been created. Successfully !')
             return redirect('registerUser')
         else:
-            if not captcha_is_valid:
-                messages.error(
-                    request, 'reCAPTCHA verification failed. Please try again.')
-
-            print('invalid form or captcha')
-            print(form.errors)
+            messages.error(
+                request, 'Invalid form submission. Please check the form errors.')
     else:
         form = UserForm()
 
     context = {
         'form': form,
+        'recaptcha_site_key': recaptcha_site_key,
     }
     return render(request, 'accounts/registerUser.html', context)
 
@@ -159,6 +141,8 @@ def registerUser(request):
 
 
 def registerRestaurant(request):
+    recaptcha_site_key = settings.RECAPTCHA_PUBLIC_KEY
+
     if request.user.is_authenticated:
         messages.warning(request, 'you are already logged in!')
         return redirect('myAccount')
@@ -202,8 +186,11 @@ def registerRestaurant(request):
                 request, 'Your account has been registered successfully! Please wait fot the approval')
             return redirect('registerRestaurant')
         else:
+            print('Invalid form or captcha')
             print('invalid form')
             print(form.errors)
+            messages.error(
+                request, 'Invalid form submission. Please check the form errors.')
     else:
         form = UserForm()
         R_form = RestaurantForm()
@@ -211,6 +198,7 @@ def registerRestaurant(request):
     context = {
         'form': form,
         'R_form': R_form,
+        'recaptcha_site_key': recaptcha_site_key,
     }
     return render(request, 'accounts/registerRestaurant.html', context)
 

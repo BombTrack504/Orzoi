@@ -37,6 +37,8 @@ function onPlaceChanged() {
 
         console.log('lat=>', latitude);
         console.log('lng=>', longitude);
+        $('#id_latitude2').val(latitude);
+        $('#id_longitude2').val(longitude);
         $('#id_latitude').val(latitude);
         $('#id_longitude').val(longitude);
         $('#id_address').val(address);

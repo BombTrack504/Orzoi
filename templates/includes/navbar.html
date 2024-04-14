@@ -1,5 +1,4 @@
 {% load static %}
-	
 	<!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -9,59 +8,60 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="img/logo.png" alt=""></a>
-        </div>
-        <div class="humberger__menu__cart">
-            <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-            </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
-        </div>
-        <div class="humberger__menu__widget">
-            <div class="header__top__right__language">
-                <img src="img/language.png" alt="">
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
-            </div>
-            <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
-            </div>
-        </div>
-        <nav class="humberger__menu__nav mobile-menu">
-            <ul>
-                <li class="active"><a href="./index.html">Home</a></li>
-                <li><a href="./shop-grid.html">Shop</a></li>
-                <li><a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-            </ul>
-        </nav>
-        <div id="mobile-menu-wrap"></div>
-        <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-        </div>
+            <a href="{% url 'home' %}"><img src="{% static 'img/logo2.png' %}" alt=""></a>
+        </div> 
+        <br>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                <li>Free Shipping for all Order of $99</li>
+                <li>
+                    <!-- <div style="position: relative;">
+                        <a href="#" id="locationLink">
+                        <input type="text" value="" name="location" id="location" style="border-radius: 20px; padding: 10px 35px 10px 10px; width: 250px; border: 1px solid #ccc;  background-repeat: no-repeat; background-position: right center;" placeholder="Get your current location"> 
+                        <i class="fa fa-map-marker" onclick="getLocation()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i> 
+                        
+                        <input type="hidden" name="lat" value="" id="id_latitude">
+                        <input type="hidden" name="lng" value="" id="id_longitude">
+                        </a>
+                    </div> -->
+                </li>  
+            </ul>
+        </div>
+        
+        <div class="humberger__menu__widget">
+            <div class="header__top__right__auth">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'myAccount' %}" style="display: inline-block; margin-right: 10px;"><i class="fa fa-user"></i>My Account</a>
+                    <a href="{% url 'logout' %}" style="display: inline-block;"><i class="fa fa-user-plus"></i>Logout</a> 
+                {% else %}
+                    <a href="{% url 'login' %}" style="display: inline-block; margin-right: 10px;"><i class="fa fa-user"></i> Login</a>
+                    <a href="{% url 'registerUser' %}" style="display: inline-block; margin-right: 10px;"><i class="fa fa-user-plus"></i> Register</a> 
+                    <a href="{% url 'registerRestaurant' %}" style="display: inline-block;"><i class="fa fa-user-plus"></i> Register Restaurant</a> 
+                {% endif %}
+            </div>
+        </div>
+        
+        <div id="mobile-menu-wrap">
+            <ul>
+                <li class="{% if '/home/' == request.path%} active{% endif %}"><a href="{% url 'home' %}">Home</a></li>
+                <li class="{% if '/marketplace/' == request.path%} active{% endif %}"><a href="{% url 'marketplace' %}">Restaurants</a></li>
+                <li class="{% if '/contact/' == request.path%} active{% endif %}"><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="humberger__menu__contact">
+            <ul>
+                <li><i class="fa fa-envelope"></i> orzoi@gmail.com</li>
             </ul>
         </div>
     </div>
+    <script>document.addEventListener("DOMContentLoaded", function() {
+        var hamburger = document.querySelector(".humberger__open");
+        var menu = document.querySelector(".humberger__menu__wrapper");
+    
+        hamburger.addEventListener("click", function() {
+            menu.classList.toggle("show__humberger__menu__wrapper");
+        });
+    });</script>
     <!-- Humberger End -->
 
     <!-- Header Section Begin -->
@@ -73,7 +73,7 @@
                         <div class="header__top__left">
                           <ul>
                             <li><i class="fa fa-envelope"></i> orzoi@gmail.com</li>
-                                <li>
+                            <li>
                                 <div style="position: relative;">
                                     <a href="#" id="locationLink">
                                     <input type="text" value="" name="location" id="location" style="border-radius: 20px; padding: 10px 35px 10px 10px; width: 250px; border: 1px solid #ccc;  background-repeat: no-repeat; background-position: right center;" placeholder="Get your current location"> 
@@ -83,7 +83,7 @@
                                     <input type="hidden" name="lng" value="" id="id_longitude">
                                     </a>
                                 </div>
-                                </li>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -119,17 +119,9 @@
                     <div class="col-lg-6">
                         <nav class="header__menu">
                             <ul>
-                                <li class="active"><a href="{% url 'home' %}">Home</a></li>
-                                <li ><a href="{% url 'marketplace' %}">Restaurants</a></li>
-                                <!-- <li><a href="#">Dropdown</a>
-                                    <ul class="header__menu__dropdown">
-                                        <li><a href="./shop-details.html">Shop Details</a></li>
-                                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                        <li><a href="./checkout.html">Check Out</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
-                                    </ul>
-                                </li> -->
-                                <li ><a href="{% url 'contact' %}">Contact</a></li>
+                                <li class="{% if '/home/' == request.path%} active{% endif %}"><a href="{% url 'home' %}">Home</a></li>
+                                <li class="{% if '/marketplace/' == request.path%} active{% endif %}"><a href="{% url 'marketplace' %}">Restaurants</a></li>
+                                <li class="{% if '/contact/' == request.path%} active{% endif %}"><a href="{% url 'contact' %}">Contact</a></li>
                             </ul>
                         </nav>
                     </div>

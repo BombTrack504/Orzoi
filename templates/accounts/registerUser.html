@@ -76,14 +76,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                {{ form.captcha }}
-                            </div>
-                            <div class="col-lg-6">
-                                <button type="submit" style="margin-top: 95px;" class="site-btn text-center">Register</button>
-                            </div>
-                        </div>
+
                         <ul class ="errorlist">
                             {% for field in form %}
                                 {% if field.errors %}
@@ -94,7 +87,18 @@
                             {% endfor %}
                             <li style="color: red;">{{form.non_field_errors}}</li>
                         </ul>
+                       
+                        {% comment %} <div class="row">
+                            <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                          </div> {% endcomment %}
+          
+                          {{ form.captcha }} 
 
+                        <div class="col-lg-6">
+                                <button type="submit" style="margin-top: 95px;" class="site-btn text-center">Register</button>
+                        </div>
+                    </div>
+                        
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <!--load message-->  

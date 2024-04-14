@@ -5,25 +5,24 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-
+from django.urls import reverse
 from django.conf import settings
 
 
 def detectUser(user):
     if user.role == 1:
-        redirecturl = 'Restaurantdashboard'
-        return redirecturl
-
+        redirectUrl = 'Restaurantdashboard'
+        return redirectUrl
     elif user.role == 2:
-        redirecturl = 'Customerdashboard'
-        return redirecturl
-
+        redirectUrl = 'Customerdashboard'
+        return redirectUrl
     elif user.role == None and user.is_superadmin:
-        redirecturl = '/admin'
-        return redirecturl
-
+        redirectUrl = '/admin'
+        return redirectUrl
 
 # call from registeruser fun and registerRestaurant fun
+
+
 def send_verification_email(request, user, mail_subject, email_template):
     # Get the default sender email address
     from_email = settings.DEFAULT_FROM_EMAIL
