@@ -79,8 +79,8 @@
                                     <input type="text" value="" name="location" id="location" style="border-radius: 20px; padding: 10px 35px 10px 10px; width: 250px; border: 1px solid #ccc;  background-repeat: no-repeat; background-position: right center;" placeholder="Get your current location"> 
                                     <i class="fa fa-map-marker" onclick="getLocation()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i> 
                                     
-                                    <input type="hidden" name="lat" value="" id="id_latitude">
-                                    <input type="hidden" name="lng" value="" id="id_longitude">
+                                    <input type="hidden" name="lat" value="" id="id_latitude2">
+                                    <input type="hidden" name="lng" value="" id="id_longitude2">
                                     </a>
                                 </div>
                             </li>
@@ -170,8 +170,8 @@
 		function showPosition(position) {
 			var lat = position.coords.latitude
 			var lng = position.coords.longitude
-            document.getElementById("id_latitude").value = lat 
-            document.getElementById("id_longitude").value = lng
+            document.getElementById("id_latitude2").value = lat 
+            document.getElementById("id_longitude2").value = lng
 
 			x.value = lat +', '+lng
 			//console.log(position);
