@@ -289,7 +289,7 @@ ul.social li{
             	<tr>
             		<td style="padding: 0 2.0em; text-align: center; padding-bottom: 3em;">
             			<div class="text">
-            				<h2>Please verify your email address to activate your account.</h2>
+							<h2>Welcome! Verify your email address to activate your account.</h2>
             			</div>
             		</td>
             	</tr>
@@ -297,6 +297,7 @@ ul.social li{
 			          <td style="text-align: center;">
 			          	<div class="text-author">
 				          	<h3 class="name">Hi, {{user.first_name}}</h3>
+							<p>Please click the button below to activate your account:</p>
 				           	<p><a href="http://{{domain}}{% url 'activate' uidb64=uid token=token %}"  class="btn btn-primary">Activate</a></p>
 			           	</div>
 			          </td>

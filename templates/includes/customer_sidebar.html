@@ -1,10 +1,66 @@
+<style>
+    .user-account-nav {
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        padding: 10px;
+        width: 250px;
+    }
+
+    .user-nav-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .user-nav-item {
+        margin-bottom: 10px;
+    }
+
+    .user-nav-link {
+        text-decoration: none;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .user-nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .user-nav-link i {
+        margin-right: 10px;
+    }
+</style>
+
 <div class="user-account-nav user-account-sidebar">
     <div class="user-nav-list">
         <ul>
-            <li class="{% if '/Customerdashboard/' == request.path or '/customer/' == request.path%} active{% endif %}"><a href="{% url 'customer' %}"><i class="icon-dashboard3"></i>Dashboard</a></li>
-            <li class="{% if '/my_orders' in request.path or '/order_details/' in request.path  %} active {% endif %}"><a href="{% url 'my_orders' %}"><i class="icon-add_shopping_cart"></i>My Orders</a></li>
-            <li class="{% if '/profile/' in request.path%}active{% endif %}"><a href="{% url 'customerprofile'%}"><i class="icon-build"></i>Profile Setting</a></li>
-            <li><a class="logout-btn" href="{% url 'logout' %}"><i class="icon-log-out"></i>Signout</a></li>
+            <li class="user-nav-item {% if '/Customerdashboard/' == request.path or '/customer/' == request.path%} active{% endif %}">
+                <a href="{% url 'customer' %}" class="user-nav-link">
+                    <i class="icon-dashboard3" style="color: black;"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="user-nav-item {% if '/my_orders' in request.path or '/order_details/' in request.path  %} active {% endif %}">
+                <a href="{% url 'my_orders' %}" class="user-nav-link">
+                    <i class="icon-add_shopping_cart" style="color: black;"></i>
+                    My Orders
+                </a>
+            </li>
+            <li class="user-nav-item {% if '/profile/' in request.path%}active{% endif %}">
+                <a href="{% url 'customerprofile'%}" class="user-nav-link">
+                    <i class="icon-build" style="color: black;"></i>
+                    Profile Setting
+                </a>
+            </li>
+            <li class="user-nav-item">
+                <a class="logout-btn user-nav-link" href="{% url 'logout' %}">
+                    <i class="icon-log-out" style="color: black;"></i>
+                    Signout
+                </a>
+            </li>
         </ul>
     </div>
 </div>

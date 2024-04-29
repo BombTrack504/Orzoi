@@ -45,7 +45,8 @@ def registerUser(request):
 
     # check if user is authemticated or not
     if request.user.is_authenticated:
-        messages.warning(request, 'you are already logged in!')
+        messages.warning(
+            request, 'Oops! You are already logged in. No need to register again.')
         # if user already authenticated redirect to respective dashboard
         return redirect('dashboard')
 
@@ -72,11 +73,11 @@ def registerUser(request):
                 request, user, mail_subject, email_template)
 
             messages.success(
-                request, 'Your account has been created. Successfully !')
+                request, 'Congratulations! Your account has been created successfully. Please check your email to activate it.')
             return redirect('registerUser')
         else:
             messages.error(
-                request, 'Invalid form submission. Please check the form errors.')
+                request, 'Uh-oh! There seems to be an issue with your submission. Please review and correct any errors.')
     else:
         form = UserForm()
 
@@ -86,65 +87,66 @@ def registerUser(request):
     }
     return render(request, 'accounts/registerUser.html', context)
 
-    if request.user.is_authenticated:
-        messages.warning(request, 'You are already logged in!')
-        return redirect('dashboard')
+    # if request.user.is_authenticated:
+    #     messages.warning(request, 'You are already logged in!')
+    #     return redirect('dashboard')
 
-    if request.method == 'POST':
-        form = UserForm(request.POST)
+    # if request.method == 'POST':
+    #     form = UserForm(request.POST)
 
-        captcha = request.POST.get('g-recaptcha-response')
-        captcha_field = ReCaptchaField(
-            widget=ReCaptchaV2Checkbox, required=False)
+    #     captcha = request.POST.get('g-recaptcha-response')
+    #     captcha_field = ReCaptchaField(
+    #         widget=ReCaptchaV2Checkbox, required=False)
 
-        # check reCAPTCHA
-        try:
-            captcha_is_valid = captcha_field.clean(captcha)
-        except forms.ValidationError:
-            captcha_is_valid = False
+    #     # check reCAPTCHA
+    #     try:
+    #         captcha_is_valid = captcha_field.clean(captcha)
+    #     except forms.ValidationError:
+    #         captcha_is_valid = False
 
-        if form.is_valid() and captcha_is_valid:
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(
-                first_name=first_name, last_name=last_name, username=username, email=email, password=password)
-            user.role = User.CUSTOMER
-            user.save()
+    #     if form.is_valid() and captcha_is_valid:
+    #         first_name = form.cleaned_data['first_name']
+    #         last_name = form.cleaned_data['last_name']
+    #         username = form.cleaned_data['username']
+    #         email = form.cleaned_data['email']
+    #         password = form.cleaned_data['password']
+    #         user = User.objects.create_user(
+    #             first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+    #         user.role = User.CUSTOMER
+    #         user.save()
 
-            # send verification email
-            mail_subject = 'Please activate your account'
-            email_template = 'accounts/emails/acc_verification_email.html'
-            send_verification_email(
-                request, user, mail_subject, email_template)
+    #         # send verification email
+    #         mail_subject = 'Please activate your account'
+    #         email_template = 'accounts/emails/acc_verification_email.html'
+    #         send_verification_email(
+    #             request, user, mail_subject, email_template)
 
-            messages.success(
-                request, 'Your account has been created successfully!')
-            return redirect('registerUser')
-        else:
-            if not captcha_is_valid:
-                messages.error(
-                    request, 'reCAPTCHA verification failed. Please try again.')
+    #         messages.success(
+    #             request, 'Your account has been created successfully!')
+    #         return redirect('registerUser')
+    #     else:
+    #         if not captcha_is_valid:
+    #             messages.error(
+    #                 request, 'reCAPTCHA verification failed. Please try again.')
 
-            messages.error(
-                request, 'Registration failed. Please correct the errors below.')
+    #         messages.error(
+    #             request, 'Registration failed. Please correct the errors below.')
 
-    else:
-        form = UserForm()
+    # else:
+    #     form = UserForm()
 
-    context = {
-        'form': form,
-    }
-    return render(request, 'accounts/registerUser.html', context)
+    # context = {
+    #     'form': form,
+    # }
+    # return render(request, 'accounts/registerUser.html', context)
 
 
 def registerRestaurant(request):
     recaptcha_site_key = settings.RECAPTCHA_PUBLIC_KEY
 
     if request.user.is_authenticated:
-        messages.warning(request, 'you are already logged in!')
+        messages.warning(
+            request, 'You are already logged in. If you wish to register a restaurant, please log out first.')
         return redirect('myAccount')
 
     elif request.method == 'POST':
@@ -183,14 +185,16 @@ def registerRestaurant(request):
                 request, user, mail_subject, email_template)
 
             messages.success(
-                request, 'Your account has been registered successfully! Please wait fot the approval')
+                request, 'Your restaurant registration has been submitted successfully!')
+            messages.success(
+                request, 'Please check your email to activate it and wait for our approval response.')
             return redirect('registerRestaurant')
         else:
             print('Invalid form or captcha')
             print('invalid form')
             print(form.errors)
             messages.error(
-                request, 'Invalid form submission. Please check the form errors.')
+                request, 'Oops! Something went wrong with your registration. Please review the form and try again.')
     else:
         form = UserForm()
         R_form = RestaurantForm()
@@ -217,10 +221,11 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(
-            request, 'congratulations!! your acc has been activated.')
+            request, 'Congratulations! Your account has been successfully activated.')
         return redirect('myAccount')
     else:
-        messages.error(request, 'Invalid activation link')
+        messages.error(
+            request, 'Oops! The activation link you clicked is invalid. Please try again or contact support.')
         return redirect('myAccount')
 
 
@@ -330,12 +335,12 @@ def forgot_password(request):
                 request, user, mail_subject, email_template)  # utils
 
             messages.success(
-                request, 'Password rest link has been sent to your email address. Please check youe Gmail')
+                request, 'A password reset link has been sent to your email address. Please check your inbox.')
             return redirect('login')
 
         else:
             messages.error(
-                request, 'Account doesnot exist!')
+                request, 'Oops! We couldn\'t find any account associated with this email address. Please double-check and try again.')
             return redirect('forgot_password')
 
     return render(request, 'accounts/forgot_password.html')
@@ -351,10 +356,11 @@ def reset_password_validate(request, uidb64, token):
 
     if user is not None and default_token_generator.check_token(user, token):
         request.session['uid'] = uid
-        messages.info(request, "Reset your Password")
+        messages.info(request, 'You can now reset your password.')
         return redirect('reset_password')
     else:
-        messages.error(request, 'The link to reset your password has expired ')
+        messages.error(
+            request, 'Oops! The link to reset your password has expired or is invalid. Please request a new one.')
         return redirect('myAccount')
 
 
@@ -369,10 +375,12 @@ def reset_password(request):
             user.set_password(password)
             user.is_active = True
             user.save()
-            messages.success(request, 'Password reset successfully!')
+            messages.success(
+                request, 'Your password has been reset successfully. You can now log in with your new password.')
             return redirect('login')
         else:
-            messages.error(request, 'passowrd do not match!')
+            messages.error(
+                request, 'Oops! The passwords you entered do not match. Please try again.')
             return redirect('reset_password')
     return render(request, 'accounts/reset_password.html')
 

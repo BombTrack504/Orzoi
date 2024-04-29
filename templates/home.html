@@ -169,13 +169,14 @@
 							<br>
 							<div class="blog__item__text">
 								<ul>
-									{% if restaurant.user_profile.city and restaurant.user_profile.state  %}
-										<li class="location" style="color: black;"><i class="fa fa-map-marker"></i> {{ restaurant.user_profile.city }}, {{ restaurant.user_profile.state}}</li>
-									{% endif %}
+									<br>
 									<h5><a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}"><b>{{ restaurant }}</b></a></h5>
 									{% if restaurant.kms%}
-										<br>
 										<span><small><b>{{restaurant.kms}}</b> km away from you.</small></span>
+									{% endif %}
+									<br>
+									{% if restaurant.user_profile.city and restaurant.user_profile.state  %}
+										<li class="location" style="color: black;"><i class="fa fa-map-marker"></i> {{ restaurant.user_profile.address }}</li>
 									{% endif %}
 								</ul>
 								<p style="margin-bottom: 8px;">Average Review <span style="color: green;"><b>{% if restaurant.averageReview %}{{ restaurant.averageReview|floatformat:1 }}</b></span> Out of 5{% else %}0 Out of 5{% endif %}</p>
@@ -190,7 +191,6 @@
 					</div>
 				</div>
 			{% endfor %}
-			
 		</div>
 		
 	</div>

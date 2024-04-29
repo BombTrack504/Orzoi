@@ -11,7 +11,6 @@ request_object = ''
 class Payment(models.Model):
     PAYMENT_METHOD = (
         ('Khalti', 'Khalti'),
-        ('PayPal', 'PayPal'),  # Paypal integration
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     transaction_id = models.CharField(max_length=100)

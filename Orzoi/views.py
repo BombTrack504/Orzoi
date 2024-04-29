@@ -43,7 +43,7 @@ def home(request):
                            (get_or_set_current_location(request)))
 
         restaurants = Restaurant.objects.filter(user_profile__location__distance_lte=(pnt, D(
-            km=15))).annotate(distance=Distance("user_profile__location", pnt)).order_by("distance")
+            km=10))).annotate(distance=Distance("user_profile__location", pnt)).order_by("distance")
         for r in restaurants:
             r.kms = round(r.distance.km, 1)
     else:

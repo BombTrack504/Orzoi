@@ -2,7 +2,6 @@ asgiref==3.7.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
 Django==5.0.2
-django-jazzmin==2.6.1
 django-ranged-response==0.2.0
 django-recaptcha==4.0.0
 GDAL @ file:///C:/Orzoi/GDAL-3.4.3-cp311-cp311-win_amd64.whl#sha256=f78861fb5115d5c2f8cf3c52a492ff548da9e1256dc84088947379f90e77e5b6

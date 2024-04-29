@@ -52,10 +52,10 @@
                                     <div class="form-field">
                                         <div class="select-wrap">
                                             <select  name="radius" id="radius" class="form-control">
-                                                <option value="5" selected>5 KM</option>
-                                                <option value="10">10 KM</option>
-                                                <option value="15">15 KM</option>
-                                                <option value="20">20 KM</option>
+                                                <option value="5" selected>3 KM</option>
+                                                <option value="10">5 KM</option>
+                                                <option value="15">10 KM</option>
+                                                <option value="20">15 KM</option>
                                             </select>
                                         </div>
                                     </div>
@@ -88,10 +88,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row d-block" >
                         {% for restaurant in restaurants %}
-                            <div class="col-lg-4 col-md-4 col-sm-6">
-                                <div class="card bordered-content" style="position: relative; background: #fff; max-width: 400px; margin: 20px auto; box-shadow: 0px 0px 1px 0px #000; border-radius: 10px; transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;">
+                            <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+                                <div class="card bordered-content" style="position: relative; background: #fff; max-width: 400px; margin: 20px auto; box-shadow: 0px 0px 1px 0px #000; border-radius: 10px; transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; font-size: 16px !important; font-family: 'Cairo', sans-serif !important;">
                                     <div style="background: url({% if restaurant.user_profile.cover_photo %} {{ restaurant.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %} {% endif %} ) no-repeat center; background-size: cover; min-height: 200px; border-radius: 10px;">
                                         {% if restaurant.is_open%}
                                             <div class="icon open" style="position: absolute; right: 10px; top: 10px; background: green; color: #fff; font-size: 1.3em; font-weight: bold; padding: 8px; border-radius: 5px; box-shadow: 0px 2px 5px 0px green;">
@@ -160,7 +160,7 @@
                                         <a href="{% url 'restaurant_detail' restaurant.restaurant_slug %}" class="btn" style="display: block; background: #EF3E36; color: #fff; position: relative; text-transform: uppercase; letter-spacing: 0.1em; text-align: center; padding: 10px; transition: 250ms;">View Menu <span style="text-transform: lowercase;">(Currently Closed)</span></a>
                                     {% endif %}
                                 </div>
-                            </div>   
+                            </div> 
                         {% endfor %}
                     </div>
                     

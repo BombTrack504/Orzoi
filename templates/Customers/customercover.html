@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="page-section restaurant-detail-image-section" style=" background: url({% static 'extra-images/cover-photo01.jpg' %}) no-repeat scroll 0 0 / cover;">
+<div class="page-section restaurant-detail-image-section" style=" background: url({% if profile.cover_photo %}{{ profile.cover_photo.url }} {% else %} {% static 'images/default-cover2.jpg' %} {% endif %} ) no-repeat scroll 0 0 / cover;">
     <!-- Container Start -->
     <div class="container">
         <!-- Row Start -->
@@ -14,7 +14,7 @@
                                 {% if profile.profile_picture %}
                                     <img src="{{ profile.profile_picture.url }}" alt="profile picture">
                                 {% else %}
-                                    <img src="{% static 'extra-images/listing-logo18.png' %}" alt="">
+                                    <img src="{% static 'images/profile-icon.jpg' %}" alt="">
                                 {% endif %}
                             </figure>
                         </div>

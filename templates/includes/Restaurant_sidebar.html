@@ -1,12 +1,78 @@
+<style>
+    .user-account-nav {
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        padding: 10px;
+        width: 250px;
+    }
+
+    .user-nav-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .user-nav-item {
+        margin-bottom: 10px;
+    }
+
+    .user-nav-link {
+        text-decoration: none;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .user-nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .user-nav-link i {
+        margin-right: 10px;
+    }
+</style>
+
 <div class="user-account-nav user-account-sidebar">
     <div class="user-nav-list">
         <ul>
-            <li class="{% if '/Restaurantdashboard/' == request.path or '/Restaurant/' == request.path %} active {% endif %}"><a href="{% url 'Restaurantdashboard' %}"><i class="icon-dashboard3"></i>Dashboard</a></li>
-            <li class="{% if '/restaurant_ord/' in request.path %} active {% endif %}"><a href="{% url 'restaurant_orders' %}"><i class="icon-add_shopping_cart"></i>Orders</a></li>
-            <li class="{% if 'profile' in request.path %} active {% endif %}"><a href="{% url 'Restaurant_profile' %}"><i class="icon-building"></i>My Restaurant</a></li>
-            <li class="{% if 'menu-builder' in request.path %} active {% endif %}"><a href="{% url 'menu_builder' %}"><i class="icon-menu5"></i>Menu Builder</a></li>
-            <li class="{% if 'opening-hour' in request.path %} active {% endif %}"><a href="{% url 'opening_hour' %}"><i class="icon-menu5"></i>Opening Hours</a></li>
-            <li><a class="logout-btn" href="{% url 'logout' %}"><i class="icon-log-out"></i>Signout</a></li>
+            <li class="{% if '/Restaurantdashboard/' == request.path or '/Restaurant/' == request.path %} active {% endif %}">
+                <a href="{% url 'Restaurantdashboard' %}" class="user-nav-link">
+                    <i class="icon-dashboard3" style="color: black;"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="{% if '/restaurant_ord/' in request.path %} active {% endif %}">
+                <a href="{% url 'restaurant_orders' %}" class="user-nav-link">
+                    <i class="icon-add_shopping_cart" style="color: black;"></i>
+                    Orders
+                </a>
+            </li>
+            <li class="{% if 'profile' in request.path %} active {% endif %}">
+                <a href="{% url 'Restaurant_profile' %}" class="user-nav-link">
+                    <i class="icon-building" style="color: black;"></i>
+                    My Restaurant
+                </a>
+            </li>
+            <li class="{% if 'menu-builder' in request.path %} active {% endif %}">
+                <a href="{% url 'menu_builder' %}" class="user-nav-link">
+                    <i class="icon-menu5" style="color: black;"></i>
+                    Menu Builder
+                </a>
+            </li>
+            <li class="{% if 'opening-hour' in request.path %} active {% endif %}">
+                <a href="{% url 'opening_hour' %}" class="user-nav-link">
+                    <i class="icon-clock" style="color: black;"></i>
+                    Opening Hours
+                </a>
+            </li>
+            <li class="user-nav-item">
+                <a class="logout-btn user-nav-link" href="{% url 'logout' %}">
+                    <i class="icon-log-out" style="color: black;"></i>
+                    Signout
+                </a>
+            </li>
         </ul>
     </div>
 </div>
