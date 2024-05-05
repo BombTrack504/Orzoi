@@ -2992,7 +2992,7 @@ ul.user-controls li:first-child i {
   text-decoration: none;
   font-size: 22px;
   padding-left: 15px;
-}
+/* }
 .woocommerce .product-thumbnail {
   text-decoration: none;
   margin-right: 20px;
@@ -13810,4 +13810,4 @@ textarea#comment_mes {
 }
 .main-search.fancy.bg-holder {
   padding: 5px 5px 0 !important;
-}
+} */

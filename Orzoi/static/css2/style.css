@@ -1158,7 +1158,7 @@ ol {
   background: #e9a625;
 }
 
-.sidebar__item__color.sidebar__item__color--red label:after {
+/* .sidebar__item__color.sidebar__item__color--red label:after {
   background: #d62d2d;
 }
 
@@ -3449,4 +3449,4 @@ ol {
   .blog__details__hero__text h2 {
     font-size: 24px;
   }
-}
+} */
